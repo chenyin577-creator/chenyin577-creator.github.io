@@ -141,7 +141,8 @@ svg {
 .section-heading,
 .lesson-panel,
 .clip-output,
-.review-panel {
+.review-panel,
+.link-workflow {
   border: 1px solid rgba(216, 225, 232, 0.92);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
@@ -463,6 +464,20 @@ svg {
 .input-stack {
   display: grid;
   gap: 12px;
+}
+
+.link-workflow {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 18px;
+}
+
+.helper-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
 }
 
 label span {

@@ -61,7 +61,25 @@
         <section class="view" id="pasteView" aria-labelledby="pasteTitle">
           <div class="section-heading">
             <p class="eyebrow">视频材料</p>
-            <h2 id="pasteTitle">粘贴字幕学习</h2>
+            <h2 id="pasteTitle">视频链接与字幕</h2>
+          </div>
+
+          <div class="link-workflow" aria-label="视频链接学习">
+            <label>
+              <span>视频链接</span>
+              <input id="videoUrl" type="url" inputmode="url" placeholder="粘贴 YouTube、访谈或英文新闻视频链接" />
+            </label>
+            <div class="action-row">
+              <button class="primary" id="copyDoubaoVideoPromptButton">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8z" /><path d="M6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                复制给豆包
+              </button>
+              <button class="secondary" id="copyCodexVideoPromptButton">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>
+                复制给 Codex
+              </button>
+            </div>
+            <p class="helper-text">适合你看到喜欢的视频时使用。复制后发给豆包或我，我会把它整理成听力课。</p>
           </div>
 
           <div class="input-stack">

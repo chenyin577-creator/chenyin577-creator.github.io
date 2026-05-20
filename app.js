@@ -706,6 +706,25 @@ const doubaoBasePrompt = `请扮演“硅谷思想视频英语听力教练”，
 
 英文材料如下：`;
 
+const videoPromptTemplate = (videoUrl, extraText) => `请扮演“硅谷思想视频英语听力教练”。学习者是中国大学英语四级水平，主要目标是听懂 Naval Ravikant、AI、风险投资、硅谷创业和国际科技视频。请优先保持真实英文视频的难度，不要改成过度简单的英语。
+
+请根据下面的视频链接，帮我做成 10-15 分钟英语听力学习资料。
+
+视频链接：
+${videoUrl}
+
+${extraText ? `我补充的字幕或背景如下：\n${extraText}\n` : "如果你无法直接读取视频字幕，请告诉我如何复制字幕；如果能读取，请直接处理。\n"}
+请严格输出：
+1. 一句话中文主旨
+2. 8 个高价值英文语块：英文 + 中文 + 使用场景
+3. 5 个值得反复听的英文原句：英文 + 中文 + 听力难点，包括连读、弱读、重音或语速
+4. 一段 120 词以内的英文复述稿，保持 CNBC / YC / podcast 的真实风格
+5. 3 个中文复述问题
+6. 1 个最值得记住的 Naval 式思想
+7. 最后给我一个“今天只学 10 分钟”的学习顺序
+
+请把输出写得适合复制回我的 Naval 英语听力 App 使用。`;
+
 let state = loadState();
 let selectedLessonDay = state.selectedLessonDay || getFirstOpenDay();
 let toastTimer = null;
@@ -1137,6 +1156,23 @@ async function copyDoubaoPrompt() {
   }
 }
 
+async function copyVideoPrompt(target) {
+  const videoUrl = document.getElementById("videoUrl").value.trim();
+  const extraText = document.getElementById("clipText").value.trim();
+  if (!videoUrl) {
+    showToast("先粘贴一个视频链接。");
+    return;
+  }
+
+  const prompt = videoPromptTemplate(videoUrl, extraText);
+  try {
+    await navigator.clipboard.writeText(prompt);
+    showToast(target === "doubao" ? "视频学习提示词已复制给豆包。" : "视频学习提示词已复制给 Codex。");
+  } catch {
+    showToast("复制失败，可以手动选中文字复制。");
+  }
+}
+
 document.addEventListener("click", (event) => {
   const speakButton = event.target.closest("[data-speak]");
   if (speakButton) {
@@ -1206,6 +1242,8 @@ document.addEventListener("click", (event) => {
 
 document.getElementById("buildClipButton").addEventListener("click", analyzeClip);
 document.getElementById("copyDoubaoPromptButton").addEventListener("click", copyDoubaoPrompt);
+document.getElementById("copyDoubaoVideoPromptButton").addEventListener("click", () => copyVideoPrompt("doubao"));
+document.getElementById("copyCodexVideoPromptButton").addEventListener("click", () => copyVideoPrompt("codex"));
 
 document.getElementById("phraseForm").addEventListener("submit", (event) => {
   event.preventDefault();
