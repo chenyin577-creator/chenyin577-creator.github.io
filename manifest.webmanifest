@@ -1,0 +1,24 @@
+{
+  "name": "Naval 英语听力",
+  "short_name": "Naval听力",
+  "description": "Naval 主题 30 天英语听力训练，支持语块、复习和豆包工作流。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f9fb",
+  "theme_color": "#f7f9fb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
