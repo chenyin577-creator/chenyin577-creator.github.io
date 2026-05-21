@@ -102,7 +102,8 @@ p {
 .secondary,
 .text-action,
 .phrase-save,
-.play-button {
+.play-button,
+.hold-button {
   border: 0;
   cursor: pointer;
 }
@@ -229,6 +230,11 @@ svg {
 .method-step {
   padding: 12px 8px;
   border-right: 1px solid var(--line);
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 0;
+  background: transparent;
+  color: inherit;
   text-align: center;
 }
 
@@ -247,6 +253,19 @@ svg {
   margin-top: 2px;
   color: var(--muted);
   font-size: 12px;
+}
+
+.method-step.active {
+  background: var(--teal);
+}
+
+.method-step.active strong,
+.method-step.active span {
+  color: white;
+}
+
+.method-step.done {
+  background: #edf8f2;
 }
 
 .lesson-block {
@@ -282,6 +301,7 @@ svg {
 .primary,
 .secondary,
 .play-button,
+.hold-button,
 .text-action,
 .phrase-save {
   display: inline-flex;
@@ -304,12 +324,14 @@ svg {
 .nav-item:active,
 .secondary:active,
 .play-button:active,
+.hold-button:active,
 .phrase-save:active {
   transform: translateY(1px);
 }
 
 .secondary,
 .play-button,
+.hold-button,
 .text-action,
 .phrase-save {
   border: 1px solid var(--line);
@@ -317,8 +339,56 @@ svg {
   color: var(--teal-deep);
 }
 
+.hold-button {
+  border-color: rgba(232, 104, 74, 0.35);
+  color: var(--coral);
+}
+
+.hold-button.recording {
+  background: var(--coral);
+  color: white;
+}
+
 .primary.compact {
   min-height: 42px;
+}
+
+.primary.wide {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.active-training {
+  background: linear-gradient(180deg, rgba(20, 124, 116, 0.05), rgba(255, 255, 255, 0));
+}
+
+.blind-card {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 18px;
+  border: 1px dashed rgba(20, 124, 116, 0.38);
+  border-radius: 8px;
+  background: #f8fbfb;
+}
+
+.blind-title {
+  margin: 0;
+  color: #263445;
+  font-size: 18px;
+  font-weight: 760;
+}
+
+.hidden-text {
+  display: inline-flex;
+  width: fit-content;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #e7efef;
+  color: var(--teal-deep);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .phrase-grid {
@@ -369,6 +439,13 @@ svg {
 
 .sentence-card {
   padding: 14px;
+}
+
+.step-count {
+  margin: 0 0 8px;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 850;
 }
 
 .sentence-card .en {

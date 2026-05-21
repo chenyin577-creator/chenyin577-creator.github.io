@@ -694,40 +694,44 @@ const LESSONS = [
 const STORAGE_KEY = "naval-listening-state-v1";
 const doubaoBasePrompt = `请扮演“硅谷思想视频英语听力教练”，学习者是中国大学英语四级水平，主要目标是听懂 Naval Ravikant、AI、风险投资、硅谷创业和国际科技视频。
 
-请把我给你的英文材料改造成 10-15 分钟听力训练课，难度接近真实 CNBC / YC / TechCrunch / podcast 原文，不要改得太简单。
+请把我给你的英文材料改造成 10-15 分钟听力训练课，难度接近真实 CNBC / YC / TechCrunch / podcast 原文，不要改得太简单。训练流程必须贯彻四步：盲听优先、精听对照、同步理解、口语复刻。
 
 请严格输出：
-1. 一句话中文主旨
-2. 8 个高价值英文语块：英文 + 中文 + 使用场景
-3. 5 个值得反复听的英文原句：英文 + 中文 + 听力难点
-4. 一段 120 词以内的英文复述稿，保持真实媒体/访谈风格
-5. 3 个中文复述问题
-6. 1 个今天最值得记住的 Naval 式思想
+1. 盲听材料：一段 80-120 词英文，先不要给中文
+2. 精听对照：同一段英文字幕
+3. 同步理解：5 个值得反复听的英文原句 + 听到后应立即出现的英文意思/画面提示
+4. 口语复刻：3 句最适合跟读模仿的原句 + 重音/连读/弱读提示
+5. 8 个高价值英文语块：英文 + 中文 + 使用场景
+6. 最后才给一句中文主旨和 3 个中文复述问题
+7. 1 个今天最值得记住的 Naval 式思想
 
 英文材料如下：`;
 
 const videoPromptTemplate = (videoUrl, extraText) => `请扮演“硅谷思想视频英语听力教练”。学习者是中国大学英语四级水平，主要目标是听懂 Naval Ravikant、AI、风险投资、硅谷创业和国际科技视频。请优先保持真实英文视频的难度，不要改成过度简单的英语。
 
-请根据下面的视频链接，帮我做成 10-15 分钟英语听力学习资料。
+请根据下面的视频链接，帮我做成 10-15 分钟英语听力学习资料。训练流程必须贯彻四步：盲听优先、精听对照、同步理解、口语复刻。
 
 视频链接：
 ${videoUrl}
 
 ${extraText ? `我补充的字幕或背景如下：\n${extraText}\n` : "如果你无法直接读取视频字幕，请告诉我如何复制字幕；如果能读取，请直接处理。\n"}
 请严格输出：
-1. 一句话中文主旨
-2. 8 个高价值英文语块：英文 + 中文 + 使用场景
-3. 5 个值得反复听的英文原句：英文 + 中文 + 听力难点，包括连读、弱读、重音或语速
-4. 一段 120 词以内的英文复述稿，保持 CNBC / YC / podcast 的真实风格
-5. 3 个中文复述问题
-6. 1 个最值得记住的 Naval 式思想
-7. 最后给我一个“今天只学 10 分钟”的学习顺序
+1. 盲听材料：一段 80-120 词英文，先不要给中文
+2. 精听对照：同一段英文字幕
+3. 同步理解：5 个值得反复听的英文原句 + 听到后应立即出现的英文意思/画面提示
+4. 口语复刻：3 句最适合跟读模仿的原句 + 重音/连读/弱读提示
+5. 8 个高价值英文语块：英文 + 中文 + 使用场景
+6. 最后才给一句中文主旨和 3 个中文复述问题
+7. 1 个最值得记住的 Naval 式思想
+8. 最后给我一个“今天只学 10 分钟”的学习顺序
 
 请把输出写得适合复制回我的 Naval 英语听力 App 使用。`;
 
 let state = loadState();
 let selectedLessonDay = state.selectedLessonDay || getFirstOpenDay();
 let toastTimer = null;
+let shadowTimer = null;
+let activeShadowButton = null;
 
 const views = document.querySelectorAll(".view");
 const navItems = document.querySelectorAll(".nav-item");
@@ -741,6 +745,8 @@ function loadState() {
   const defaults = {
     completed: {},
     notes: {},
+    blindNotes: {},
+    lessonStages: {},
     phrases: [],
     selectedLessonDay: 1,
     sessionMinutes: 10,
@@ -766,6 +772,17 @@ function getFirstOpenDay() {
 
 function getLesson(day) {
   return LESSONS.find((lesson) => lesson.day === Number(day)) || LESSONS[0];
+}
+
+function getLessonStage(day) {
+  return Math.min(Math.max(Number(state.lessonStages[String(day)] || 1), 1), 4);
+}
+
+function setLessonStage(day, stage) {
+  saveLessonDrafts();
+  state.lessonStages[String(day)] = Math.min(Math.max(Number(stage), 1), 4);
+  saveState();
+  renderToday();
 }
 
 function escapeHtml(value) {
@@ -822,20 +839,36 @@ function updateSessionChips() {
   });
 }
 
+function saveLessonDrafts() {
+  const blindBox = document.getElementById("blindNoteBox");
+  if (blindBox) state.blindNotes[String(selectedLessonDay)] = blindBox.value.trim();
+
+  const reflectionBox = document.getElementById("reflectionBox");
+  if (reflectionBox) state.notes[String(selectedLessonDay)] = reflectionBox.value.trim();
+}
+
 function renderToday() {
   const lesson = getLesson(selectedLessonDay);
   document.getElementById("currentDayNumber").textContent = lesson.day;
   document.getElementById("todaySubtitle").textContent = `${lesson.title} · ${lesson.theme}`;
   const completed = Boolean(state.completed[String(lesson.day)]);
+  const stage = getLessonStage(lesson.day);
   const savedNote = state.notes[String(lesson.day)] || "";
+  const savedBlindNote = state.blindNotes[String(lesson.day)] || "";
   const lightMode = Number(state.sessionMinutes) === 5;
+  const stageNames = [
+    ["盲听优先", "只听声音"],
+    ["精听对照", "看英文字幕"],
+    ["同步理解", "听到即懂"],
+    ["口语复刻", "模仿输出"]
+  ];
   const phraseHtml = lesson.phrases
     .map(
       ([en, cn]) => `
         <div class="phrase-card">
           <div>
             <strong>${escapeHtml(en)}</strong>
-            <span>${escapeHtml(cn)}</span>
+            <span>${stage >= 4 ? escapeHtml(cn) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
           </div>
           <button class="phrase-save" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" aria-label="保存 ${escapeHtml(en)}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z" /></svg>
@@ -846,12 +879,14 @@ function renderToday() {
     .join("");
 
   const sentenceItems = (lightMode ? lesson.sentences.slice(0, 2) : lesson.sentences)
-    .map(
-      ([en, cn, tip]) => `
+    .map(([en, cn, tip], index) => {
+      const sentenceNumber = index + 1;
+      return `
         <div class="sentence-card">
+          <p class="step-count">Sentence ${sentenceNumber}</p>
           <p class="en">${escapeHtml(en)}</p>
-          <p class="cn">${escapeHtml(cn)}</p>
-          <p class="tip">${escapeHtml(tip)}</p>
+          ${stage >= 4 ? `<p class="cn">${escapeHtml(cn)}</p>` : ""}
+          <p class="tip">${stage >= 4 ? escapeHtml(tip) : "听完立刻在脑中出现意思，不要先翻译成中文。"}</p>
           <div class="sentence-actions">
             <button class="play-button" data-speak="${escapeHtml(en)}" data-rate="0.72">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
@@ -861,39 +896,85 @@ function renderToday() {
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
               正常
             </button>
+            ${
+              stage >= 4
+                ? `<button class="hold-button" data-shadow-text="${escapeHtml(en)}" data-shadow-index="${sentenceNumber}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
+                    按住复刻
+                  </button>`
+                : ""
+            }
           </div>
         </div>
+      `;
+    })
+    .join("");
+
+  const stageStrip = stageNames
+    .map(
+      ([name, hint], index) => `
+        <button class="method-step ${stage === index + 1 ? "active" : ""} ${stage > index + 1 ? "done" : ""}" data-set-stage="${index + 1}">
+          <strong>${index + 1}. ${name}</strong>
+          <span>${hint}</span>
+        </button>
       `
     )
     .join("");
 
-  lessonPanel.innerHTML = `
-    <div class="lesson-hero">
-      <p class="eyebrow">Day ${lesson.day}</p>
-      <h2>${escapeHtml(lesson.title)}</h2>
-      <p>${escapeHtml(lesson.idea)}</p>
-    </div>
+  const blindBlock = `
+    <section class="lesson-block active-training">
+      <p class="eyebrow">Step 1</p>
+      <h3>盲听优先</h3>
+      <div class="blind-card">
+        <p class="blind-title">先不要看英文，也不要急着翻译。只让耳朵接收声音。</p>
+        <p class="hidden-text">字幕已隐藏</p>
+      </div>
+      <div class="action-row">
+        <button class="primary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.95">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          盲听正常速
+        </button>
+        <button class="secondary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.78">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          再听慢速
+        </button>
+      </div>
+      <textarea class="reflection-box" id="blindNoteBox" placeholder="可选：写下你听到的关键词或大意。不要查字幕。">${escapeHtml(savedBlindNote)}</textarea>
+      <button class="primary wide" data-set-stage="2">我听完了，进入精听对照</button>
+    </section>
+  `;
 
-    <div class="method-strip">
-      <div class="method-step"><strong>先听</strong><span>抓大意</span></div>
-      <div class="method-step"><strong>抓语块</strong><span>不拆词</span></div>
-      <div class="method-step"><strong>跟原句</strong><span>听节奏</span></div>
-      <div class="method-step"><strong>中文复述</strong><span>变理解</span></div>
-    </div>
+  const subtitleBlock = `
+    <section class="lesson-block active-training">
+      <p class="eyebrow">Step 2</p>
+      <h3>精听对照</h3>
+      <p class="zh-note">现在只看英文字幕，对照刚才听到的声音。先用英文连接意思，中文解释先不放在眼前。</p>
+      <p class="passage">${escapeHtml(lesson.passage)}</p>
+      <div class="action-row">
+        <button class="primary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.86">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          看英文再听
+        </button>
+        <button class="secondary" data-set-stage="1">回到盲听</button>
+        <button class="secondary" data-set-stage="3">进入同步理解</button>
+      </div>
+    </section>
 
     <section class="lesson-block">
-      <h3>英文原文</h3>
-      <p class="passage">${escapeHtml(lesson.passage)}</p>
-      <p class="zh-note">${escapeHtml(lesson.zh)}</p>
+      <h3>先抓英文语块</h3>
+      <div class="phrase-grid">${phraseHtml}</div>
+    </section>
+  `;
+
+  const syncBlock = `
+    <section class="lesson-block active-training">
+      <p class="eyebrow">Step 3</p>
+      <h3>同步理解</h3>
+      <p class="zh-note">每句听完后，马上在脑中出现画面或意思。不要先译成中文；确认理解后再继续下一句。</p>
+      <div class="sentence-list">${sentenceItems}</div>
       <div class="action-row">
-        <button class="primary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.72">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
-          慢速听
-        </button>
-        <button class="secondary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.95">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
-          正常听
-        </button>
+        <button class="secondary" data-set-stage="2">回到精听</button>
+        <button class="primary" data-set-stage="4">进入口语复刻</button>
       </div>
     </section>
 
@@ -901,16 +982,26 @@ function renderToday() {
       <h3>高价值语块</h3>
       <div class="phrase-grid">${phraseHtml}</div>
     </section>
+  `;
 
-    <section class="lesson-block">
-      <h3>逐句听力</h3>
+  const shadowBlock = `
+    <section class="lesson-block active-training">
+      <p class="eyebrow">Step 4</p>
+      <h3>口语复刻</h3>
+      <p class="zh-note">先听一句，再按住“按住复刻”模仿说出来。重点不是录音打分，而是像婴儿学语一样复刻节奏、重音和停顿。</p>
       <div class="sentence-list">${sentenceItems}</div>
     </section>
 
+    <section class="lesson-block">
+      <h3>语块收入语感库</h3>
+      <div class="phrase-grid">${phraseHtml}</div>
+    </section>
+
     <section class="lesson-block complete-panel">
-      <h3>中文复述</h3>
+      <h3>最后复盘</h3>
       <p class="zh-note">${escapeHtml(lesson.reflection)}</p>
-      <textarea class="reflection-box" id="reflectionBox" placeholder="用自己的中文写两三句话。">${escapeHtml(savedNote)}</textarea>
+      <p class="zh-note">${escapeHtml(lesson.zh)}</p>
+      <textarea class="reflection-box" id="reflectionBox" placeholder="用自己的中文写两三句话，确认已经听懂。">${escapeHtml(savedNote)}</textarea>
       <div class="action-row">
         <button class="primary" id="completeLessonButton">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg>
@@ -922,6 +1013,30 @@ function renderToday() {
         </button>
       </div>
     </section>
+  `;
+
+  const heroHints = {
+    1: "今天先不看文字，只用耳朵进入这段英文。",
+    2: "现在看英文字幕，把声音和英文意思接起来。",
+    3: "逐句训练听到就懂，尽量跳过中文翻译。",
+    4: lesson.idea
+  };
+
+  lessonPanel.innerHTML = `
+    <div class="lesson-hero">
+      <p class="eyebrow">Day ${lesson.day}</p>
+      <h2>${escapeHtml(lesson.title)}</h2>
+      <p>${escapeHtml(heroHints[stage])}</p>
+    </div>
+
+    <div class="method-strip">
+      ${stageStrip}
+    </div>
+
+    ${stage === 1 ? blindBlock : ""}
+    ${stage === 2 ? subtitleBlock : ""}
+    ${stage === 3 ? syncBlock : ""}
+    ${stage === 4 ? shadowBlock : ""}
   `;
 }
 
@@ -1021,9 +1136,9 @@ function openView(viewId) {
 }
 
 function completeCurrentLesson() {
-  const noteBox = document.getElementById("reflectionBox");
-  state.notes[String(selectedLessonDay)] = noteBox ? noteBox.value.trim() : "";
+  saveLessonDrafts();
   state.completed[String(selectedLessonDay)] = new Date().toISOString();
+  state.lessonStages[String(selectedLessonDay)] = 4;
   state.selectedLessonDay = selectedLessonDay;
   saveState();
   renderAll();
@@ -1031,8 +1146,10 @@ function completeCurrentLesson() {
 }
 
 function goNextLesson() {
+  saveLessonDrafts();
   selectedLessonDay = selectedLessonDay >= LESSONS.length ? 1 : selectedLessonDay + 1;
   state.selectedLessonDay = selectedLessonDay;
+  state.lessonStages[String(selectedLessonDay)] ||= 1;
   saveState();
   renderAll();
   openView("todayView");
@@ -1173,7 +1290,44 @@ async function copyVideoPrompt(target) {
   }
 }
 
+function startShadowing(button) {
+  window.clearInterval(shadowTimer);
+  const startedAt = Date.now();
+  activeShadowButton = button;
+  button.classList.add("recording");
+  button.dataset.originalText = button.textContent.trim();
+  button.innerHTML = `
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
+    复刻中 0s
+  `;
+  shadowTimer = window.setInterval(() => {
+    const seconds = Math.floor((Date.now() - startedAt) / 1000);
+    button.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
+      复刻中 ${seconds}s
+    `;
+  }, 500);
+}
+
+function stopShadowing(button) {
+  if (!button.classList.contains("recording")) return;
+  window.clearInterval(shadowTimer);
+  activeShadowButton = null;
+  button.classList.remove("recording");
+  button.innerHTML = `
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
+    按住复刻
+  `;
+  showToast("很好。再听原句，对照节奏。");
+}
+
 document.addEventListener("click", (event) => {
+  const stageButton = event.target.closest("[data-set-stage]");
+  if (stageButton) {
+    setLessonStage(selectedLessonDay, Number(stageButton.dataset.setStage));
+    return;
+  }
+
   const speakButton = event.target.closest("[data-speak]");
   if (speakButton) {
     speak(speakButton.dataset.speak, Number(speakButton.dataset.rate || 0.86));
@@ -1207,6 +1361,7 @@ document.addEventListener("click", (event) => {
 
   const lessonButton = event.target.closest("[data-open-lesson]");
   if (lessonButton) {
+    saveLessonDrafts();
     selectedLessonDay = Number(lessonButton.dataset.openLesson);
     state.selectedLessonDay = selectedLessonDay;
     saveState();
@@ -1217,12 +1372,14 @@ document.addEventListener("click", (event) => {
 
   const navButton = event.target.closest("[data-view]");
   if (navButton) {
+    saveLessonDrafts();
     openView(navButton.dataset.view);
     return;
   }
 
   const sessionButton = event.target.closest("[data-session]");
   if (sessionButton) {
+    saveLessonDrafts();
     state.sessionMinutes = Number(sessionButton.dataset.session);
     saveState();
     renderAll();
@@ -1238,6 +1395,27 @@ document.addEventListener("click", (event) => {
   if (event.target.closest("#nextLessonButton")) {
     goNextLesson();
   }
+});
+
+document.addEventListener("pointerdown", (event) => {
+  const holdButton = event.target.closest("[data-shadow-text]");
+  if (!holdButton) return;
+  event.preventDefault();
+  startShadowing(holdButton);
+});
+
+document.addEventListener("pointerup", (event) => {
+  const holdButton = event.target.closest("[data-shadow-text]") || activeShadowButton;
+  if (holdButton) stopShadowing(holdButton);
+});
+
+document.addEventListener("pointercancel", () => {
+  document.querySelectorAll(".hold-button.recording").forEach(stopShadowing);
+});
+
+document.addEventListener("pointerleave", (event) => {
+  const holdButton = event.target.closest?.("[data-shadow-text]");
+  if (holdButton) stopShadowing(holdButton);
 });
 
 document.getElementById("buildClipButton").addEventListener("click", analyzeClip);
