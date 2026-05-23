@@ -702,21 +702,21 @@ const LESSONS_WARMUP = [
     zh:
       "今天先把见面打招呼最高频的几块整体吞下：long time no see / catch up / hang in there / drop by / what have you been up to。",
     phrases: [
-      ["long time no see", "好久不见"],
-      ["how have you been", "你近来怎么样"],
-      ["it's been a while", "有阵子没见了"],
-      ["drop by", "顺路过来一下"],
-      ["catch up", "叙叙旧 / 聊聊近况"],
-      ["what have you been up to", "你最近在忙什么"],
-      ["hanging in there", "还撑着 / 还行吧"],
-      ["good to see you", "见到你真好"],
-      ["the usual", "老样子"],
-      ["figure out a time", "约一个时间"],
-      ["grab coffee", "去喝杯咖啡"],
-      ["on my end", "我这边"],
-      ["meaning to", "一直想要"],
-      ["let me know", "告诉我一声"],
-      ["sometime this week", "这周找个时间"]
+      ["long time no see", "好久不见", "long time | no see——一长串日子+没碰面，中式直译反成惯用"],
+      ["how have you been", "你近来怎么样", "have been = 一直处在——问的是这阵子的状态，不是此刻"],
+      ["it's been a while", "有阵子没见了", "已经过了 a while——a while 是一段不长不短的时间"],
+      ["drop by", "顺路过来一下", "drop = 放下，by = 路过——经过时把自己短暂\"丢\"在你这"],
+      ["catch up", "叙叙旧 / 聊聊近况", "catch = 追上，up = 到位——把没聊到的近况一路追平"],
+      ["what have you been up to", "你最近在忙什么", "up to = 投入到——你这阵子一直\"扑\"在什么上"],
+      ["hanging in there", "还撑着 / 还行吧", "整个人挂在那儿——没掉下来也没爬上去"],
+      ["good to see you", "见到你真好", "能看见你这件事本身就好"],
+      ["the usual", "老样子", "那一份\"常点的\"——不用说菜名，对方知道是哪个"],
+      ["figure out a time", "约一个时间", "figure = 把形状画出来——把\"什么时候\"在脑里描清"],
+      ["grab coffee", "去喝杯咖啡", "grab = 一把抓——顺手拎一杯，不是慢慢喝"],
+      ["on my end", "我这边", "end = 一端——像电话线两头，我这一头"],
+      ["meaning to", "一直想要", "心里一直 mean 着要——意图持续但还没做"],
+      ["let me know", "告诉我一声", "let me know——让我处于\"已知道\"的状态"],
+      ["sometime this week", "这周找个时间", "some + time——这周的某一刻，不指定"]
     ],
     sentences: [
       ["Long time no see! How have you been?", "好久不见，你最近怎么样？", "long time no see 是一个固定整块，连读不要拆。"],
@@ -735,21 +735,21 @@ const LESSONS_WARMUP = [
     zh:
       "今天 heads up / loop in / circle back / on the same page / touch base 这一组是邮件和会议里被听漏最多的过渡语块。",
     phrases: [
-      ["give you a heads up", "提前给你打个招呼"],
-      ["loop you in", "把你拉进这件事"],
-      ["circle back", "回头再谈"],
-      ["on the same page", "想法一致"],
-      ["move forward", "继续推进"],
-      ["cc me", "邮件抄送我"],
-      ["from my side", "从我这边"],
-      ["shoot me a message", "发我一条消息"],
-      ["touch base", "碰个头 / 简短沟通一下"],
-      ["wrap this up", "把这件事收尾"],
-      ["end of the day", "今天结束前"],
-      ["follow up on", "跟进"],
-      ["take the lead", "牵头负责"],
-      ["push back on", "反对 / 推回去"],
-      ["drop the ball", "掉链子 / 没办好"]
+      ["give you a heads up", "提前给你打个招呼", "heads up = 把头抬起来——前面有情况，先看一眼"],
+      ["loop you in", "把你拉进这件事", "loop = 圈，in = 进来——把你套进这个圈里"],
+      ["circle back", "回头再谈", "绕一个圆回到这一点——现在跳过，待会儿绕回"],
+      ["on the same page", "想法一致", "翻开的是同一页书——你看到的字和我一模一样"],
+      ["move forward", "继续推进", "往前挪一步——不是飞速，是迈一步"],
+      ["cc me", "邮件抄送我", "carbon copy 的字母音——抄送名单加上我"],
+      ["from my side", "从我这边", "side = 边——一桌人不同位置，我这一边"],
+      ["shoot me a message", "发我一条消息", "shoot = 射——朝我射一条消息过来"],
+      ["touch base", "碰个头", "棒球摸一下垒——只是\"我到了\"的确认，不停留"],
+      ["wrap this up", "把这件事收尾", "像包礼物一样把它包起来——包好就能收走"],
+      ["end of the day", "今天结束前", "end = 一天的尽头——收尾的时间点"],
+      ["follow up on", "跟进", "跟着这件事的尾巴——up 走到底，on 贴着"],
+      ["take the lead", "牵头负责", "lead = 牵绳——谁拿绳谁在前"],
+      ["push back on", "反对 / 推回去", "把它往回推一下——不是硬反对，是推回去"],
+      ["drop the ball", "掉链子 / 没办好", "球掉了——接力赛接错球，谁掉的谁负责"]
     ],
     sentences: [
       ["Just wanted to give you a heads up — I'll loop you in on the email.", "只是想提前知会你一声，邮件里我会把你加进来。", "give you a heads up 整块；loop you in 中 you 弱读。"],
@@ -768,21 +768,21 @@ const LESSONS_WARMUP = [
     zh:
       "餐厅里 for here or to go / on the house / split the bill / pick up the tab 这几块出现频率极高，但教科书几乎不教。",
     phrases: [
-      ["grab a bite", "随便吃点"],
-      ["I'm starving", "我饿死了"],
-      ["down the street", "这条街往前一点"],
-      ["give it a shot", "试一下"],
-      ["for here or to go", "在这吃还是带走"],
-      ["dine in", "店内用餐"],
-      ["I'm not in a rush", "我不赶时间"],
-      ["on the house", "店家请客 / 免费的"],
-      ["split the bill", "AA 平分账单"],
-      ["pick up the tab", "我来买单"],
-      ["your call", "你决定"],
-      ["sounds good", "听起来不错"],
-      ["I'm easy", "我都行 / 我随意"],
-      ["I'll pass", "我就不要了"],
-      ["not really my thing", "不太是我喜欢的"]
+      ["grab a bite", "随便吃点", "grab = 抓，bite = 一口——抓一口吃的"],
+      ["I'm starving", "我饿死了", "正在饿死——-ing 表持续，比 hungry 狠得多"],
+      ["down the street", "这条街往前一点", "down = 顺向——沿着街继续往前，不一定下坡"],
+      ["give it a shot", "试一下", "shot = 一发子弹——给这事一发，试一枪"],
+      ["for here or to go", "在这吃还是带走", "for here = 留在这；to go = 往外走"],
+      ["dine in", "店内用餐", "in = 在里面——在店里吃"],
+      ["I'm not in a rush", "我不赶时间", "rush = 冲——我不在\"急冲\"这状态里"],
+      ["on the house", "店家请客", "这一份算房子的——house = 店家"],
+      ["split the bill", "AA 平分账单", "split = 劈开——把账单劈两半"],
+      ["pick up the tab", "我来买单", "tab = 小账单——我把它捡起来，我付"],
+      ["your call", "你决定", "call = 召唤/决定——这通电话你打"],
+      ["sounds good", "听起来不错", "sound = 听感——这件事听着就 OK"],
+      ["I'm easy", "我都行", "easy 形容自己——我没要求，怎么都行"],
+      ["I'll pass", "我就不要了", "pass = 传/过——这一棒让它过去"],
+      ["not really my thing", "不太是我喜欢的", "my thing = 我那一件——不在我的偏好里"]
     ],
     sentences: [
       ["Want to grab a bite? I'm starving.", "想去随便吃点吗？我饿死了。", "grab a bite 是固定整块，不要听成 grab a bait。"],
@@ -801,21 +801,21 @@ const LESSONS_WARMUP = [
     zh:
       "pencil in / push back / move up / on short notice / let me get back to you 这一组在工作和生活里都出现，听不懂时间安排就乱套。",
     phrases: [
-      ["pencil you in", "暂时把你排进日程"],
-      ["push it back", "时间往后推"],
-      ["move it up", "时间往前提"],
-      ["something came up", "临时有事"],
-      ["running a bit late", "我有点迟到"],
-      ["I'll be there in ten", "我十分钟到"],
-      ["on short notice", "临时通知"],
-      ["reschedule", "改约时间"],
-      ["take your time", "你慢慢来"],
-      ["I'm not going anywhere", "我不会走 / 不急"],
-      ["let me get back to you", "我回头答复你"],
-      ["I'm tied up", "我抽不开身"],
-      ["right on time", "刚好准时"],
-      ["about time", "终于"],
-      ["any time works", "什么时候都行"]
+      ["pencil you in", "暂时把你排进日程", "铅笔 = 可擦——先写进日程，可能要改"],
+      ["push it back", "时间往后推", "把它往后推——日历上往后挪"],
+      ["move it up", "时间往前提", "up 这里 = 日历更早的位置——往前提"],
+      ["something came up", "临时有事", "有件事冒上来——up = 冒头出现"],
+      ["running a bit late", "我有点迟到", "正在\"跑着晚一点\"——running 持续中"],
+      ["I'll be there in ten", "我十分钟到", "in ten = 十分钟内——再过十分钟我就在那"],
+      ["on short notice", "临时通知", "在\"短得很的通知\"里——notice = 提前知会"],
+      ["reschedule", "改约时间", "re- = 再，schedule = 时间表——重新排"],
+      ["take your time", "你慢慢来", "把时间拿走——你想用多少就用"],
+      ["I'm not going anywhere", "我不急", "我哪也不去——意思是慢慢来"],
+      ["let me get back to you", "我回头答复你", "back to = 回到——让我回头再走回来"],
+      ["I'm tied up", "我抽不开身", "tied up = 被绑住——动弹不得"],
+      ["right on time", "刚好准时", "right = 正/恰好——正好在时间点上"],
+      ["about time", "终于", "差不多到这个时间——也用作\"早该如此\"的感叹"],
+      ["any time works", "什么时候都行", "works = 跑得通——任何时间都能行"]
     ],
     sentences: [
       ["Can we push it back to next week? Something came up.", "可以推到下周吗？临时有点事。", "push it back 中 it 弱读到几乎听不见。"],
@@ -834,21 +834,21 @@ const LESSONS_WARMUP = [
     zh:
       "I'd say / it depends / on the fence / off the top of my head / take it with a grain of salt 是英语里给意见时的核心整块，比 maybe / I think 更高频。",
     phrases: [
-      ["I'd say", "我会说 / 我觉得"],
-      ["it depends", "看情况"],
-      ["from my perspective", "在我看来"],
-      ["kind of makes sense", "有点道理"],
-      ["on the fence", "拿不定主意"],
-      ["off the top of my head", "我随口一想"],
-      ["take it with a grain of salt", "别太当真"],
-      ["to be fair", "公平地说"],
-      ["honestly speaking", "说实话"],
-      ["leaning toward", "倾向于"],
-      ["it's your call", "你决定吧"],
-      ["worth a try", "值得一试"],
-      ["for sure", "肯定的"],
-      ["no doubt", "毫无疑问"],
-      ["I'm just guessing", "我只是猜的"]
+      ["I'd say", "我会说 / 我觉得", "would 软化语气——比 I say 客气一档"],
+      ["it depends", "看情况", "depend = 吊在某件事上——它要看那件事怎样"],
+      ["from my perspective", "在我看来", "perspective = 透视点——我站这个视角"],
+      ["kind of makes sense", "有点道理", "sense = 理出头绪——有那么一点想得通"],
+      ["on the fence", "拿不定主意", "站在篱笆上——不左不右，两边没下"],
+      ["off the top of my head", "我随口一想", "从头顶随手摘下来——没准，随口说"],
+      ["take it with a grain of salt", "别太当真", "配一小撮盐吃——加点怀疑，别全信"],
+      ["to be fair", "公平地说", "fair = 公平——公平点讲"],
+      ["honestly speaking", "说实话", "speaking 正在进行——老实讲话"],
+      ["leaning toward", "倾向于", "lean = 倾斜——身子往这边歪过去"],
+      ["it's your call", "你决定吧", "call = 决定——这通电话你来打"],
+      ["worth a try", "值得一试", "worth = 配得上——配得上试一发"],
+      ["for sure", "肯定的", "为了\"确定\"这件事——100%"],
+      ["no doubt", "毫无疑问", "doubt = 怀疑——没有怀疑"],
+      ["I'm just guessing", "我只是猜的", "正在猜——-ing 表当下"]
     ],
     sentences: [
       ["From my perspective, it kind of makes sense, but I'm on the fence.", "在我看来有点道理，但我还在犹豫。", "kind of 弱读成 kinda；on the fence 整块。"],
@@ -867,21 +867,21 @@ const LESSONS_WARMUP = [
     zh:
       "walk me through / not sure I follow / wrap my head around / what do you mean by / fill me in 是英语对话里求澄清的标准整块。",
     phrases: [
-      ["walk me through", "一步一步给我讲一遍"],
-      ["one more time", "再一次"],
-      ["I'm not sure I follow", "我没太跟上"],
-      ["give me a hand", "帮我个忙"],
-      ["wrap my head around", "想明白 / 搞懂"],
-      ["what do you mean by", "你说的什么意思"],
-      ["give me an example", "举个例子"],
-      ["if I got this right", "我理解的对不对"],
-      ["fill me in", "把情况告诉我"],
-      ["when you have a minute", "你有空的时候"],
-      ["give it a shot", "试一下"],
-      ["no promises", "不能保证"],
-      ["lend a hand", "搭把手"],
-      ["no clue", "完全没头绪"],
-      ["get the hang of", "找到窍门"]
+      ["walk me through", "一步一步讲一遍", "陪我一步步走一遍——像导游带路"],
+      ["one more time", "再一次", "再一遍——不是\"再几次\""],
+      ["I'm not sure I follow", "我没太跟上", "follow = 跟在后面——我不确定跟上了"],
+      ["give me a hand", "帮我个忙", "借我一只手——帮忙的具象说法"],
+      ["wrap my head around", "想明白", "用头把它包起来——想通了才包得住"],
+      ["what do you mean by", "你说的什么意思", "mean = 指向——你说这个指什么"],
+      ["give me an example", "举个例子", "抽象→具象的桥——给一个例子"],
+      ["if I got this right", "我理解对不对", "got = 抓到——我抓对了吗"],
+      ["fill me in", "把情况告诉我", "把我灌满——把信息填进来"],
+      ["when you have a minute", "你有空的时候", "你有那一分钟的时候——不急"],
+      ["give it a shot", "试一下", "shot = 一发——给这事一枪试试"],
+      ["no promises", "不能保证", "不打包票——不承诺成"],
+      ["lend a hand", "搭把手", "把一只手借给——比 give 更轻，借完还"],
+      ["no clue", "完全没头绪", "clue = 线索——一条都没"],
+      ["get the hang of", "找到窍门", "hang = 挂着的把手——抓住它的窍门"]
     ],
     sentences: [
       ["Sorry, could you walk me through that one more time?", "不好意思，能再带我过一遍吗？", "walk me through 整块，me through 连读。"],
@@ -900,21 +900,21 @@ const LESSONS_WARMUP = [
     zh:
       "that being said / on the other hand / fair enough / point taken / come to think of it 是英语里转折让步的高频整块，比 but 自然得多。",
     phrases: [
-      ["I get your point", "我懂你的意思"],
-      ["that being said", "话虽如此"],
-      ["another side to consider", "还有另一面要考虑"],
-      ["on the other hand", "另一方面"],
-      ["fair enough", "有道理 / 也行"],
-      ["point taken", "你说的有道理"],
-      ["come to think of it", "现在想想"],
-      ["didn't quite work", "效果不太好"],
-      ["then again", "话又说回来"],
-      ["it's not that simple", "没那么简单"],
-      ["there's more to it", "事情没这么简单"],
-      ["I see where you're coming from", "我理解你的角度"],
-      ["agree to disagree", "保留各自看法"],
-      ["on second thought", "再想想"],
-      ["having said that", "话虽如此"]
+      ["I get your point", "我懂你的意思", "point = 尖头/要点——我抓到你的点了"],
+      ["that being said", "话虽如此", "那句话已经说出来了——接转折"],
+      ["another side to consider", "还有另一面要考虑", "side = 面——多面体里还有一面"],
+      ["on the other hand", "另一方面", "在另一只手上——一手一边比较"],
+      ["fair enough", "有道理 / 也行", "够公平了——没意见，接受"],
+      ["point taken", "你说的有道理", "take = 接住——你的点我接住了"],
+      ["come to think of it", "现在想想", "字面是\"来到想起这事\"——开始想起来"],
+      ["didn't quite work", "效果不太好", "quite = 完全，work = 跑得通——没完全走通"],
+      ["then again", "话又说回来", "再说一遍——表示转回头说"],
+      ["it's not that simple", "没那么简单", "that = 那种程度——没有\"那么\"简单"],
+      ["there's more to it", "事情没这么简单", "它后面还有更多——表面之外有内容"],
+      ["I see where you're coming from", "我理解你的角度", "看见你从哪走来——你的来路即你的角度"],
+      ["agree to disagree", "各保留看法", "同意彼此不同意——双方都不动"],
+      ["on second thought", "再想想", "在第二次想的时候——重新想想后"],
+      ["having said that", "话虽如此", "说完那句话之后——接让步转折"]
     ],
     sentences: [
       ["That being said, there's another side to consider.", "话虽如此，还有另一面要考虑。", "that being said 整块开头，常用于让步。"],
@@ -1321,15 +1321,18 @@ function renderToday() {
   const showCn = stage >= 4;
   const phraseHtml = lesson.phrases
     .map(
-      ([en, cn]) => {
+      ([en, cn, intuition]) => {
         const highlight = stage === 2 && (highlightLevel === "懂大意" || highlightLevel === "几个词" || highlightLevel === "没听懂");
+        const primary = intuition || cn;
+        const secondary = intuition ? cn : "";
         return `
         <div class="phrase-card${highlight ? " phrase-highlight" : ""}">
           <div>
             <strong>${escapeHtml(en)}</strong>
-            <span>${showCn ? escapeHtml(cn) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
+            <span class="phrase-intuition">${showCn ? escapeHtml(primary) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
+            ${showCn && secondary ? `<span class="phrase-cn-aside">${escapeHtml(secondary)}</span>` : ""}
           </div>
-          <button class="phrase-save" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" aria-label="保存 ${escapeHtml(en)}">
+          <button class="phrase-save" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" data-intuition="${escapeHtml(intuition || "")}" aria-label="保存 ${escapeHtml(en)}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z" /></svg>
           </button>
         </div>
@@ -1644,17 +1647,22 @@ function renderPhrases() {
 
   phraseList.innerHTML = state.phrases
     .map(
-      (item, index) => `
+      (item, index) => {
+        const primary = item.intuition || item.cn;
+        const secondary = item.intuition ? item.cn : "";
+        return `
         <div class="phrase-card">
           <div>
             <strong>${escapeHtml(item.en)}</strong>
-            <span>${escapeHtml(item.cn)}</span>
+            <span class="phrase-intuition">${escapeHtml(primary)}</span>
+            ${secondary ? `<span class="phrase-cn-aside">${escapeHtml(secondary)}</span>` : ""}
           </div>
           <button class="phrase-save" data-remove-phrase="${index}" aria-label="删除 ${escapeHtml(item.en)}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12" /><path d="M9 7V5h6v2" /><path d="m9 11 .5 7" /><path d="m15 11-.5 7" /><path d="M8 7l1 13h6l1-13" /></svg>
           </button>
         </div>
-      `
+      `;
+      }
     )
     .join("");
 }
@@ -1672,13 +1680,16 @@ function renderReview() {
       const mastery = deriveMastery(item.en, record);
       const isSpoken = state.spokenChunks.some((e) => (typeof e === "string" ? e : e.en) === item.en);
       const intervalLabel = record.interval ? `下次 ${record.interval} 天后` : "首次复习";
+      const primary = item.intuition || item.cn;
+      const secondary = item.intuition ? item.cn : "";
       return `
         <div class="review-card mastery-${mastery}">
           <div class="review-head">
             <strong>${escapeHtml(item.en)}</strong>
             <span class="mastery-tag">${mastery}</span>
           </div>
-          <p>${escapeHtml(item.cn)}</p>
+          <p class="phrase-intuition">${escapeHtml(primary)}</p>
+          ${secondary ? `<p class="phrase-cn-aside">${escapeHtml(secondary)}</p>` : ""}
           <p class="muted small">${intervalLabel} · 已复习 ${record.repetitions || 0} 次</p>
           <div class="action-row">
             <button class="play-button" data-speak="${escapeHtml(item.en)}" data-rate="0.82">
@@ -1761,9 +1772,10 @@ function updateSrsCard(en, grade) {
   saveState();
 }
 
-function savePhrase(en, cn) {
+function savePhrase(en, cn, intuition) {
   const trimmedEn = en.trim();
-  const trimmedCn = cn.trim() || "自定义语块";
+  const trimmedCn = (cn || "").trim() || "自定义语块";
+  const trimmedIn = (intuition || "").trim();
   if (!trimmedEn) return;
   if (state.phrases.some((item) => item.en.toLowerCase() === trimmedEn.toLowerCase())) {
     showToast("这个语块已经保存过了。");
@@ -1772,6 +1784,7 @@ function savePhrase(en, cn) {
   state.phrases.unshift({
     en: trimmedEn,
     cn: trimmedCn,
+    intuition: trimmedIn,
     createdAt: new Date().toISOString()
   });
   saveState();
@@ -2240,7 +2253,7 @@ document.addEventListener("click", (event) => {
 
   const phraseButton = event.target.closest("[data-save-phrase]");
   if (phraseButton) {
-    savePhrase(phraseButton.dataset.savePhrase, phraseButton.dataset.meaning);
+    savePhrase(phraseButton.dataset.savePhrase, phraseButton.dataset.meaning, phraseButton.dataset.intuition);
     return;
   }
 

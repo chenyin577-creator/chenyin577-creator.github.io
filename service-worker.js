@@ -1,4 +1,4 @@
-const CACHE_NAME = "naval-listening-v7-waveform";
+const CACHE_NAME = "naval-listening-v8-intuition";
 const APP_FILES = [
   "./",
   "./index.html",

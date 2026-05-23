@@ -863,6 +863,22 @@ dialog::backdrop {
   border-color: var(--teal);
 }
 
+/* phrase 画面感解读 vs 中文辅助 */
+.phrase-intuition {
+  display: block;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.phrase-cn-aside {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
 /* 字幕高亮 */
 .phrase-highlight {
   background: #fff7e1;
