@@ -1158,7 +1158,20 @@ function speak(text, rate = 0.86) {
   utterance.rate = rate;
   utterance.pitch = 1;
   const voices = window.speechSynthesis.getVoices();
-  const preferred = voices.find((voice) => /Samantha|Ava|Allison|Daniel|Karen|Google US English/i.test(voice.name));
+  // 优先级：(Enhanced/Premium) > Siri/Neural > 已知好声音 > 任何 en-US
+  const tiers = [
+    /(Premium|Enhanced).*en[-_]US/i,
+    /en[-_]US.*(Premium|Enhanced)/i,
+    /(Siri|Neural|Natural)/i,
+    /(Ava|Allison|Samantha|Joelle|Nicky|Karen)/i,
+    /Google US English/i,
+    /en[-_]US/i
+  ];
+  let preferred = null;
+  for (const re of tiers) {
+    preferred = voices.find((v) => re.test(v.name) || (v.lang && re.test(v.lang)));
+    if (preferred) break;
+  }
   if (preferred) utterance.voice = preferred;
   window.speechSynthesis.speak(utterance);
 }
@@ -2027,13 +2040,13 @@ async function showWaveformDialog(blob, originalText) {
     const arrayBuf = await blob.arrayBuffer();
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const audioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
-    userSamples = downsample(audioBuf.getChannelData(0), 320);
+    userSamples = downsample(audioBuf.getChannelData(0), 640);
     await ctx.close();
   } catch (err) {
     console.warn("decode failed", err);
   }
 
-  const pulseSamples = getSyllablePulses(originalText, 320);
+  const pulseSamples = getSyllablePulses(originalText, 640);
   drawWaveformOverlay(canvas, userSamples, pulseSamples);
 
   if (typeof dialog.showModal === "function") dialog.showModal();
@@ -2070,29 +2083,77 @@ function countSyllables(word) {
   return Math.max(1, n);
 }
 
+const WEAK_WORDS = new Set([
+  "a","an","the","of","to","in","on","at","for","and","but","or","is","are","was","were","be","been","being","do","does","did","have","has","had","i","you","he","she","it","we","they","my","your","his","her","its","our","their","that","this","these","those","as","from","with","by","into","than","then","so","just","up","out","not"
+]);
+
 function getSyllablePulses(text, length) {
   const tokens = text.replace(/[—–-]/g, " ").split(/\s+/).filter(Boolean);
   if (!tokens.length) return new Float32Array(length);
+
+  // 1) 拆 beats —— 每个 beat 是一个音节 + 间隔
   const beats = [];
-  tokens.forEach((tok, idx) => {
+  tokens.forEach((tok, tokIdx) => {
+    const clean = tok.toLowerCase().replace(/[^a-z']/g, "");
     const sylls = countSyllables(tok);
-    for (let i = 0; i < sylls; i++) beats.push({ stress: i === 0 && /[A-Z]/.test(tok[0]) ? 1 : 0.7, token: tok });
-    if (idx < tokens.length - 1 && /[.,!?;:]$/.test(tok)) beats.push({ stress: 0, gap: true });
-  });
-  const totalBeats = beats.length;
-  const out = new Float32Array(length);
-  const beatWidth = length / totalBeats;
-  beats.forEach((beat, i) => {
-    if (beat.gap) return;
-    const center = Math.floor((i + 0.5) * beatWidth);
-    const halfWidth = Math.max(3, Math.floor(beatWidth * 0.4));
-    for (let x = -halfWidth; x <= halfWidth; x++) {
-      const idx = center + x;
-      if (idx < 0 || idx >= length) continue;
-      const env = Math.cos((x / halfWidth) * (Math.PI / 2));
-      out[idx] = Math.max(out[idx], env * beat.stress);
+    const isWeak = WEAK_WORDS.has(clean);
+    const hasEndStop = /[.!?]$/.test(tok);
+    const hasComma = /[,;:]$/.test(tok);
+    const isCap = /^[A-Z]/.test(tok) && tokIdx > 0;
+    for (let i = 0; i < sylls; i++) {
+      let stress;
+      if (isWeak) stress = 0.3 + Math.random() * 0.1;
+      else if (i === 0) stress = (isCap ? 0.95 : 0.85) + Math.random() * 0.08;
+      else stress = 0.5 + Math.random() * 0.12;
+      // 双音节词第二音节按 trochee 规律压低；三音节词中间稍重
+      if (sylls === 2 && i === 1) stress *= 0.7;
+      if (sylls === 3 && i === 1) stress *= 0.85;
+      beats.push({ kind: "syl", stress, length: 1 + (i === 0 && !isWeak ? 0.2 : 0) });
     }
+    if (hasEndStop) beats.push({ kind: "gap", length: 1.8 });
+    else if (hasComma) beats.push({ kind: "gap", length: 1.0 });
+    else if (tokIdx < tokens.length - 1) beats.push({ kind: "gap", length: 0.35 });
   });
+
+  // 2) 总长度归一化到 length
+  const totalUnits = beats.reduce((s, b) => s + b.length, 0);
+  const unitW = length / totalUnits;
+
+  // 3) 渲染：每个音节里画 ADSR 包络 + 多频微震荡
+  const out = new Float32Array(length);
+  let cursor = 0;
+  beats.forEach((beat, beatIdx) => {
+    const widthPx = beat.length * unitW;
+    if (beat.kind === "gap") {
+      cursor += widthPx;
+      return;
+    }
+    const start = Math.floor(cursor);
+    const end = Math.min(length, Math.floor(cursor + widthPx));
+    const seed = (beatIdx * 17 + 3) % 31; // 给每个音节一个微变种子
+    for (let idx = start; idx < end; idx++) {
+      const t = (idx - start) / Math.max(1, end - start);
+      // ADSR: attack 0-0.12, decay→0.7, sustain 0.7, release 0.7→0
+      let env;
+      if (t < 0.12) env = t / 0.12;
+      else if (t < 0.28) env = 1 - 0.3 * ((t - 0.12) / 0.16);
+      else if (t < 0.72) env = 0.7;
+      else env = 0.7 * (1 - (t - 0.72) / 0.28);
+      // 多频微震荡，模拟真实声音
+      const wobble =
+        Math.sin(t * Math.PI * (6 + seed * 0.4)) * 0.12 +
+        Math.sin(t * Math.PI * (17 + seed * 0.3)) * 0.07 +
+        Math.sin(t * Math.PI * (29 + seed)) * 0.04;
+      const value = Math.max(0, env * beat.stress + wobble * env);
+      out[idx] = value;
+    }
+    cursor += widthPx;
+  });
+
+  // 4) 整段轻度归一化
+  let max = 0;
+  for (let i = 0; i < out.length; i++) if (out[i] > max) max = out[i];
+  if (max > 0.01) for (let i = 0; i < out.length; i++) out[i] /= max;
   return out;
 }
 
