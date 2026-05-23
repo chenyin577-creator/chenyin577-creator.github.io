@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260520-fourstep" />
+    <link rel="stylesheet" href="styles.css?v=20260522-engines" />
   </head>
   <body>
     <div class="app-shell">
@@ -36,10 +36,9 @@
               <h2 id="todayTitle">第 <span id="currentDayNumber">1</span> 天</h2>
               <p id="todaySubtitle" class="muted"></p>
             </div>
-            <div class="progress-ring" aria-label="学习进度">
-              <span id="progressPercent">0%</span>
-            </div>
           </div>
+
+          <div class="dashboard-cards" id="dashboardCards" aria-label="听感仪表盘"></div>
 
           <div class="session-control" aria-label="学习时长">
             <button class="chip active" data-session="10">10 分钟</button>
@@ -160,11 +159,36 @@
     <dialog id="installDialog">
       <div class="dialog-inner">
         <h2>放到 iPhone 主屏幕</h2>
-        <p>用 Safari 打开这个页面，点底部分享按钮，再点“添加到主屏幕”。以后就像 App 一样打开。</p>
+        <p>用 Safari 打开这个页面，点底部分享按钮，再点"添加到主屏幕"。以后就像 App 一样打开。</p>
         <button class="primary" id="closeInstallDialog">知道了</button>
       </div>
     </dialog>
 
-    <script src="app.js?v=20260520-fourstep" defer></script>
+    <dialog id="recordingDialog" class="recording-dialog">
+      <div class="dialog-inner">
+        <h2>对照你的发声</h2>
+        <p class="muted">蓝色是你刚才录的波形，橙色是原文音节节奏带。重点不在词不达意，在<strong>节奏和停顿</strong>是否对得上。</p>
+        <p class="recording-target">原文：<span id="recordingTargetText"></span></p>
+        <canvas id="waveformCanvas" width="640" height="200" class="waveform-canvas"></canvas>
+        <audio id="recordingUserAudio" controls preload="auto"></audio>
+        <div class="recording-controls">
+          <button class="secondary" id="recordingReplayButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            回放我
+          </button>
+          <button class="secondary" id="recordingPlayOriginalButton">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            听原文
+          </button>
+          <button class="primary" id="recordingSatisfyButton" data-target-text="">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg>
+            这条满意
+          </button>
+          <button class="ghost" id="recordingCloseButton">关闭</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="app.js?v=20260522-engines" defer></script>
   </body>
 </html>

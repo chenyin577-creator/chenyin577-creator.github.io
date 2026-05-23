@@ -691,7 +691,241 @@ const LESSONS = [
   }
 ];
 
-const STORAGE_KEY = "naval-listening-state-v1";
+const LESSONS_WARMUP = [
+  {
+    day: 1,
+    title: "Catching Up",
+    theme: "见面寒暄",
+    idea: "把日常打招呼听成整块，不要听单词。",
+    passage:
+      "Hey, long time no see! How have you been? It's been a while. I keep meaning to drop by, but things have been crazy on my end. Let's grab coffee sometime and catch up properly. What have you been up to lately? Oh, just the usual, hanging in there. Honestly, it's so good to see you again. Let me know when you're free this week and we'll figure out a time.",
+    zh:
+      "今天先把见面打招呼最高频的几块整体吞下：long time no see / catch up / hang in there / drop by / what have you been up to。",
+    phrases: [
+      ["long time no see", "好久不见"],
+      ["how have you been", "你近来怎么样"],
+      ["it's been a while", "有阵子没见了"],
+      ["drop by", "顺路过来一下"],
+      ["catch up", "叙叙旧 / 聊聊近况"],
+      ["what have you been up to", "你最近在忙什么"],
+      ["hanging in there", "还撑着 / 还行吧"],
+      ["good to see you", "见到你真好"],
+      ["the usual", "老样子"],
+      ["figure out a time", "约一个时间"],
+      ["grab coffee", "去喝杯咖啡"],
+      ["on my end", "我这边"],
+      ["meaning to", "一直想要"],
+      ["let me know", "告诉我一声"],
+      ["sometime this week", "这周找个时间"]
+    ],
+    sentences: [
+      ["Long time no see! How have you been?", "好久不见，你最近怎么样？", "long time no see 是一个固定整块，连读不要拆。"],
+      ["I keep meaning to drop by, but things have been crazy on my end.", "我一直想顺路来看你，但我这边一直很忙。", "keep meaning to 是反复想做却没做；on my end 是\"我这边\"。"],
+      ["Let me know when you're free and we'll figure out a time.", "你有空告诉我，我们再定时间。", "let me know 弱读，figure out a time 整块出来。"]
+    ],
+    reflection: "今天有哪一个语块，你过去会听成单词、现在能听成整块？"
+  },
+  {
+    day: 2,
+    title: "At Work",
+    theme: "工作沟通",
+    idea: "邮件/会议里最常被听漏的过渡语块，整组吞下。",
+    passage:
+      "Hey, just wanted to give you a heads up — I'll loop you in on the email. Can we circle back on this tomorrow? I want to make sure we're on the same page before we move forward. Also, please cc me when you send it out. If you need anything from my side, just shoot me a message. Let's touch base end of the day and wrap this up.",
+    zh:
+      "今天 heads up / loop in / circle back / on the same page / touch base 这一组是邮件和会议里被听漏最多的过渡语块。",
+    phrases: [
+      ["give you a heads up", "提前给你打个招呼"],
+      ["loop you in", "把你拉进这件事"],
+      ["circle back", "回头再谈"],
+      ["on the same page", "想法一致"],
+      ["move forward", "继续推进"],
+      ["cc me", "邮件抄送我"],
+      ["from my side", "从我这边"],
+      ["shoot me a message", "发我一条消息"],
+      ["touch base", "碰个头 / 简短沟通一下"],
+      ["wrap this up", "把这件事收尾"],
+      ["end of the day", "今天结束前"],
+      ["follow up on", "跟进"],
+      ["take the lead", "牵头负责"],
+      ["push back on", "反对 / 推回去"],
+      ["drop the ball", "掉链子 / 没办好"]
+    ],
+    sentences: [
+      ["Just wanted to give you a heads up — I'll loop you in on the email.", "只是想提前知会你一声，邮件里我会把你加进来。", "give you a heads up 整块；loop you in 中 you 弱读。"],
+      ["I want to make sure we're on the same page before we move forward.", "推进之前我想确认我们想法一致。", "make sure we're 连读；on the same page 是核心整块。"],
+      ["Let's touch base end of the day and wrap this up.", "今天结束前我们碰一下，把这件事收尾。", "touch base 不能听成 touch base ball；wrap this up 末尾上挑。"]
+    ],
+    reflection: "circle back 和 touch base 在你的工作里对应哪种场景？"
+  },
+  {
+    day: 3,
+    title: "Food and Coffee",
+    theme: "餐饮购物",
+    idea: "餐厅、咖啡店、便利店里高频被吞掉的口语整块。",
+    passage:
+      "Want to grab a bite? I'm starving. There's this new spot down the street — let's give it a shot. Is it for here or to go? Let's dine in, I'm not in a rush. The drinks are on the house tonight, by the way. We can split the bill or I'll just pick up the tab — your call. Honestly, anything sounds good to me, I'm easy.",
+    zh:
+      "餐厅里 for here or to go / on the house / split the bill / pick up the tab 这几块出现频率极高，但教科书几乎不教。",
+    phrases: [
+      ["grab a bite", "随便吃点"],
+      ["I'm starving", "我饿死了"],
+      ["down the street", "这条街往前一点"],
+      ["give it a shot", "试一下"],
+      ["for here or to go", "在这吃还是带走"],
+      ["dine in", "店内用餐"],
+      ["I'm not in a rush", "我不赶时间"],
+      ["on the house", "店家请客 / 免费的"],
+      ["split the bill", "AA 平分账单"],
+      ["pick up the tab", "我来买单"],
+      ["your call", "你决定"],
+      ["sounds good", "听起来不错"],
+      ["I'm easy", "我都行 / 我随意"],
+      ["I'll pass", "我就不要了"],
+      ["not really my thing", "不太是我喜欢的"]
+    ],
+    sentences: [
+      ["Want to grab a bite? I'm starving.", "想去随便吃点吗？我饿死了。", "grab a bite 是固定整块，不要听成 grab a bait。"],
+      ["Is it for here or to go?", "在这吃还是带走？", "for here or to go 是收银员标准提问，整块识别。"],
+      ["We can split the bill or I'll just pick up the tab — your call.", "我们可以 AA，或者我来买单——你定。", "split the bill / pick up the tab 都是固定块。"]
+    ],
+    reflection: "下次去咖啡店，你能不能不思考就听出 for here or to go？"
+  },
+  {
+    day: 4,
+    title: "Schedules and Plans",
+    theme: "时间约定",
+    idea: "约时间、改时间、迟到、临时变动——高频但语速快的整块。",
+    passage:
+      "Are you free Thursday? Let me pencil you in. Actually, can we push it back to next week? Something came up. I'm running a bit late — start without me, I'll be there in ten. Sorry for the short notice, but I have to reschedule. Can we move it up to two? Take your time, I'm not going anywhere. Let me get back to you on that.",
+    zh:
+      "pencil in / push back / move up / on short notice / let me get back to you 这一组在工作和生活里都出现，听不懂时间安排就乱套。",
+    phrases: [
+      ["pencil you in", "暂时把你排进日程"],
+      ["push it back", "时间往后推"],
+      ["move it up", "时间往前提"],
+      ["something came up", "临时有事"],
+      ["running a bit late", "我有点迟到"],
+      ["I'll be there in ten", "我十分钟到"],
+      ["on short notice", "临时通知"],
+      ["reschedule", "改约时间"],
+      ["take your time", "你慢慢来"],
+      ["I'm not going anywhere", "我不会走 / 不急"],
+      ["let me get back to you", "我回头答复你"],
+      ["I'm tied up", "我抽不开身"],
+      ["right on time", "刚好准时"],
+      ["about time", "终于"],
+      ["any time works", "什么时候都行"]
+    ],
+    sentences: [
+      ["Can we push it back to next week? Something came up.", "可以推到下周吗？临时有点事。", "push it back 中 it 弱读到几乎听不见。"],
+      ["I'm running a bit late — start without me.", "我有点迟到，你们先开始。", "running a bit late 整块，bit late 连读。"],
+      ["Sorry for the short notice, but I have to reschedule.", "抱歉这么临时通知，但我要改时间。", "on short notice 等结构要听成整块。"]
+    ],
+    reflection: "push back 和 move up 你能立刻反应过来是往后还是往前吗？"
+  },
+  {
+    day: 5,
+    title: "Opinions and Maybes",
+    theme: "表达观点",
+    idea: "英语里表达\"也许、大概、说不准\"的整块远比 maybe 多。",
+    passage:
+      "I'd say it's worth a try, but honestly, it depends. From my perspective, it kind of makes sense, but I'm on the fence. Off the top of my head, I can think of two reasons. Take it with a grain of salt — I'm just guessing here. To be fair, both options have upsides. Honestly speaking, I'm leaning toward the second one, but it's your call.",
+    zh:
+      "I'd say / it depends / on the fence / off the top of my head / take it with a grain of salt 是英语里给意见时的核心整块，比 maybe / I think 更高频。",
+    phrases: [
+      ["I'd say", "我会说 / 我觉得"],
+      ["it depends", "看情况"],
+      ["from my perspective", "在我看来"],
+      ["kind of makes sense", "有点道理"],
+      ["on the fence", "拿不定主意"],
+      ["off the top of my head", "我随口一想"],
+      ["take it with a grain of salt", "别太当真"],
+      ["to be fair", "公平地说"],
+      ["honestly speaking", "说实话"],
+      ["leaning toward", "倾向于"],
+      ["it's your call", "你决定吧"],
+      ["worth a try", "值得一试"],
+      ["for sure", "肯定的"],
+      ["no doubt", "毫无疑问"],
+      ["I'm just guessing", "我只是猜的"]
+    ],
+    sentences: [
+      ["From my perspective, it kind of makes sense, but I'm on the fence.", "在我看来有点道理，但我还在犹豫。", "kind of 弱读成 kinda；on the fence 整块。"],
+      ["Off the top of my head, I can think of two reasons.", "我随口想，能想到两个理由。", "off the top of my head 是固定块，整体识别。"],
+      ["Take it with a grain of salt — I'm just guessing here.", "别太当真——我只是随口说说。", "take it with a grain of salt 整块，不要拆 grain 和 salt。"]
+    ],
+    reflection: "你今天在中文里说\"看情况\"的时候，能脱口而出 it depends 吗？"
+  },
+  {
+    day: 6,
+    title: "Asking and Clarifying",
+    theme: "求助澄清",
+    idea: "听不懂、需要重复、需要解释——这一组是听力卡壳时最有用的整块。",
+    passage:
+      "Sorry, could you walk me through that one more time? I'm not sure I follow. Could you give me a hand with this? I just can't wrap my head around it. What do you mean by \"throughput\"? Could you give me an example? Let me see if I got this right. Fill me in when you have a minute. I'll give it a shot, but no promises.",
+    zh:
+      "walk me through / not sure I follow / wrap my head around / what do you mean by / fill me in 是英语对话里求澄清的标准整块。",
+    phrases: [
+      ["walk me through", "一步一步给我讲一遍"],
+      ["one more time", "再一次"],
+      ["I'm not sure I follow", "我没太跟上"],
+      ["give me a hand", "帮我个忙"],
+      ["wrap my head around", "想明白 / 搞懂"],
+      ["what do you mean by", "你说的什么意思"],
+      ["give me an example", "举个例子"],
+      ["if I got this right", "我理解的对不对"],
+      ["fill me in", "把情况告诉我"],
+      ["when you have a minute", "你有空的时候"],
+      ["give it a shot", "试一下"],
+      ["no promises", "不能保证"],
+      ["lend a hand", "搭把手"],
+      ["no clue", "完全没头绪"],
+      ["get the hang of", "找到窍门"]
+    ],
+    sentences: [
+      ["Sorry, could you walk me through that one more time?", "不好意思，能再带我过一遍吗？", "walk me through 整块，me through 连读。"],
+      ["I just can't wrap my head around it.", "我就是想不明白这件事。", "wrap my head around 是固定块。"],
+      ["Fill me in when you have a minute.", "你有空把情况告诉我。", "fill me in 整块，me in 连读到几乎一个音。"]
+    ],
+    reflection: "下次听不懂时，你会用 \"I'm not sure I follow\" 还是 \"What?\""
+  },
+  {
+    day: 7,
+    title: "Pivots and Trade-offs",
+    theme: "转折让步",
+    idea: "口语里的转折远比 but 多——这组整块是听懂逻辑变化的关键。",
+    passage:
+      "I get your point. That being said, there's another side to consider. On the other hand, the cost is real. Fair enough — point taken. Come to think of it, we tried this last year and it didn't quite work. Then again, things have changed. It's not that simple; there's more to it. I see where you're coming from, but let's agree to disagree on this one.",
+    zh:
+      "that being said / on the other hand / fair enough / point taken / come to think of it 是英语里转折让步的高频整块，比 but 自然得多。",
+    phrases: [
+      ["I get your point", "我懂你的意思"],
+      ["that being said", "话虽如此"],
+      ["another side to consider", "还有另一面要考虑"],
+      ["on the other hand", "另一方面"],
+      ["fair enough", "有道理 / 也行"],
+      ["point taken", "你说的有道理"],
+      ["come to think of it", "现在想想"],
+      ["didn't quite work", "效果不太好"],
+      ["then again", "话又说回来"],
+      ["it's not that simple", "没那么简单"],
+      ["there's more to it", "事情没这么简单"],
+      ["I see where you're coming from", "我理解你的角度"],
+      ["agree to disagree", "保留各自看法"],
+      ["on second thought", "再想想"],
+      ["having said that", "话虽如此"]
+    ],
+    sentences: [
+      ["That being said, there's another side to consider.", "话虽如此，还有另一面要考虑。", "that being said 整块开头，常用于让步。"],
+      ["Come to think of it, we tried this last year.", "现在想想，我们去年试过这个。", "come to think of it 整块作为思维转折标志。"],
+      ["I see where you're coming from, but let's agree to disagree.", "我理解你的角度，但我们各自保留看法吧。", "where you're coming from 整块，是\"你的角度\"。"]
+    ],
+    reflection: "七天热身之后，下一步进入 30 天 Naval。你的耳朵准备好了吗？"
+  }
+];
+
+const STORAGE_KEY = "naval-listening-state-v2";
 const doubaoBasePrompt = `请扮演“硅谷思想视频英语听力教练”，学习者是中国大学英语四级水平，主要目标是听懂 Naval Ravikant、AI、风险投资、硅谷创业和国际科技视频。
 
 请把我给你的英文材料改造成 10-15 分钟听力训练课，难度接近真实 CNBC / YC / TechCrunch / podcast 原文，不要改得太简单。训练流程必须贯彻四步：盲听优先、精听对照、同步理解、口语复刻。
@@ -728,10 +962,13 @@ ${extraText ? `我补充的字幕或背景如下：\n${extraText}\n` : "如果�
 请把输出写得适合复制回我的 Naval 英语听力 App 使用。`;
 
 let state = loadState();
-let selectedLessonDay = state.selectedLessonDay || getFirstOpenDay();
+let selectedLessonDay = getActiveSelectedDay();
 let toastTimer = null;
-let shadowTimer = null;
 let activeShadowButton = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordingStream = null;
+let recordingForText = "";
 
 const views = document.querySelectorAll(".view");
 const navItems = document.querySelectorAll(".nav-item");
@@ -743,6 +980,7 @@ const toast = document.getElementById("toast");
 
 function loadState() {
   const defaults = {
+    schemaVersion: 2,
     completed: {},
     notes: {},
     blindNotes: {},
@@ -750,39 +988,146 @@ function loadState() {
     phrases: [],
     selectedLessonDay: 1,
     sessionMinutes: 10,
-    reviewLog: {}
+    reviewLog: {},
+    activeTrack: "warmup",
+    warmupCompleted: {},
+    warmupStages: {},
+    warmupSelectedDay: 1,
+    blindAccuracy: {},
+    spokenChunks: []
   };
 
+  let saved = {};
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return { ...defaults, ...saved };
-  } catch {
-    return defaults;
+    const legacy = JSON.parse(localStorage.getItem("naval-listening-state-v1"));
+    if (legacy && !localStorage.getItem(STORAGE_KEY)) saved = legacy;
+  } catch {}
+  try {
+    const current = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (current) saved = current;
+  } catch {}
+
+  const merged = { ...defaults, ...saved };
+  return migrateState(merged);
+}
+
+function migrateState(s) {
+  if (!s.schemaVersion || s.schemaVersion < 2) {
+    const oldLog = s.reviewLog || {};
+    const newLog = {};
+    Object.entries(oldLog).forEach(([en, value]) => {
+      if (value && typeof value === "object" && "dueDate" in value) {
+        newLog[en] = value;
+        return;
+      }
+      const lastDate = typeof value === "string" ? value : new Date().toDateString();
+      newLog[en] = {
+        ef: 2.5,
+        interval: 1,
+        repetitions: 1,
+        dueDate: toIsoDay(new Date(lastDate)),
+        lastReviewed: toIsoDay(new Date(lastDate)),
+        mastery: "听过"
+      };
+    });
+    s.reviewLog = newLog;
+    if (s.activeTrack == null) s.activeTrack = "warmup";
+    if (!s.warmupCompleted) s.warmupCompleted = {};
+    if (!s.warmupStages) s.warmupStages = {};
+    if (!s.warmupSelectedDay) s.warmupSelectedDay = 1;
+    if (!s.blindAccuracy) s.blindAccuracy = {};
+    if (!Array.isArray(s.spokenChunks)) s.spokenChunks = [];
+    s.schemaVersion = 2;
   }
+  return s;
+}
+
+function toIsoDay(date) {
+  const d = date instanceof Date && !isNaN(date) ? date : new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function todayIso() {
+  return toIsoDay(new Date());
+}
+
+function addDays(isoDay, n) {
+  const d = new Date(isoDay + "T00:00:00");
+  d.setDate(d.getDate() + Math.round(n));
+  return toIsoDay(d);
 }
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getActiveLessons() {
+  return state.activeTrack === "naval" ? LESSONS : LESSONS_WARMUP;
+}
+
+function getCompletedMap() {
+  return state.activeTrack === "naval" ? state.completed : state.warmupCompleted;
+}
+
+function getStagesMap() {
+  return state.activeTrack === "naval" ? state.lessonStages : state.warmupStages;
+}
+
+function getActiveSelectedDay() {
+  const stored = state.activeTrack === "naval" ? state.selectedLessonDay : state.warmupSelectedDay;
+  if (stored) return Number(stored);
+  return getFirstOpenDay();
+}
+
+function setActiveSelectedDay(day) {
+  if (state.activeTrack === "naval") state.selectedLessonDay = day;
+  else state.warmupSelectedDay = day;
+}
+
 function getFirstOpenDay() {
-  const first = LESSONS.find((lesson) => !state.completed[String(lesson.day)]);
-  return first ? first.day : 30;
+  const lessons = getActiveLessons();
+  const completedMap = getCompletedMap();
+  const first = lessons.find((lesson) => !completedMap[String(lesson.day)]);
+  return first ? first.day : lessons[lessons.length - 1].day;
 }
 
 function getLesson(day) {
-  return LESSONS.find((lesson) => lesson.day === Number(day)) || LESSONS[0];
+  const lessons = getActiveLessons();
+  return lessons.find((lesson) => lesson.day === Number(day)) || lessons[0];
 }
 
 function getLessonStage(day) {
-  return Math.min(Math.max(Number(state.lessonStages[String(day)] || 1), 1), 4);
+  const stages = getStagesMap();
+  return Math.min(Math.max(Number(stages[String(day)] || 1), 1), 5);
 }
 
 function setLessonStage(day, stage) {
+  const requested = Math.min(Math.max(Number(stage), 1), 5);
+  const current = getLessonStage(day);
+  if (requested > current + 1) {
+    showToast("请按顺序进入下一阶段，不要跳过盲听。");
+    return;
+  }
+  if (requested === 2 && !(state.blindAccuracy[stageKey(day)] || {}).first) {
+    showToast("先选一下你刚才盲听到什么程度。");
+    return;
+  }
   saveLessonDrafts();
-  state.lessonStages[String(day)] = Math.min(Math.max(Number(stage), 1), 4);
+  const stages = getStagesMap();
+  stages[String(day)] = requested;
   saveState();
   renderToday();
+}
+
+function stageKey(day) {
+  return `${state.activeTrack}-${day}`;
+}
+
+function isWarmupComplete() {
+  return LESSONS_WARMUP.every((lesson) => state.warmupCompleted[String(lesson.day)]);
 }
 
 function escapeHtml(value) {
@@ -828,9 +1173,99 @@ function renderAll() {
 }
 
 function updateProgress() {
-  const done = Object.keys(state.completed).length;
-  const percent = Math.round((done / LESSONS.length) * 100);
-  document.getElementById("progressPercent").textContent = `${percent}%`;
+  renderDashboard();
+}
+
+function renderDashboard() {
+  const container = document.getElementById("dashboardCards");
+  if (!container) return;
+
+  const blindData = getRecentBlindAccuracy(7);
+  const masteryData = getMasteryDistribution();
+  const spokenWeek = getSpokenChunksThisWeek();
+  const totalChunks = state.spokenChunks.length;
+
+  const accuracyColors = {
+    "全懂": "var(--color-accent-strong, #1f9d55)",
+    "懂大意": "var(--color-accent, #38c172)",
+    "几个词": "var(--color-warn, #f5a623)",
+    "没听懂": "var(--color-soft, #d4d8df)"
+  };
+
+  const blindBars = blindData
+    .map(({ date, level }) => {
+      const color = level ? accuracyColors[level] : "var(--color-soft, #e4e7eb)";
+      const height = level === "全懂" ? 100 : level === "懂大意" ? 75 : level === "几个词" ? 45 : level === "没听懂" ? 20 : 6;
+      const label = date.slice(5);
+      return `<div class="bar-slot"><div class="bar" style="height:${height}%; background:${color};" title="${label} · ${level || "未练"}"></div><span>${label}</span></div>`;
+    })
+    .join("");
+
+  const masteryTotal = Math.max(1, masteryData.陌生 + masteryData.听过 + masteryData.一听就懂 + masteryData.能用出来);
+  const seg = (n, color) => `<span class="stack-seg" style="flex:${n}; background:${color};" title="${n}"></span>`;
+  const masteryStack = `
+    ${seg(masteryData.陌生, "var(--color-soft, #d4d8df)")}
+    ${seg(masteryData.听过, "#f5a623")}
+    ${seg(masteryData.一听就懂, "#38c172")}
+    ${seg(masteryData.能用出来, "#3490dc")}
+  `;
+
+  container.innerHTML = `
+    <div class="dashboard-card">
+      <p class="eyebrow">本周首遍盲听</p>
+      <div class="bar-chart">${blindBars || "<span class='muted'>开始第一课就有数据</span>"}</div>
+      <p class="card-foot muted">${blindData.filter((d) => d.level).length} / 7 天有数据</p>
+    </div>
+    <div class="dashboard-card">
+      <p class="eyebrow">语块熟练度</p>
+      <div class="stacked-bar" aria-label="语块熟练度分布">${masteryStack}</div>
+      <p class="card-foot muted">陌生 ${masteryData.陌生} · 听过 ${masteryData.听过} · 一听就懂 ${masteryData.一听就懂} · 能用 ${masteryData.能用出来}</p>
+    </div>
+    <div class="dashboard-card">
+      <p class="eyebrow">能开口语块</p>
+      <p class="big-number">${totalChunks}</p>
+      <p class="card-foot muted">本周 +${spokenWeek}</p>
+    </div>
+  `;
+}
+
+function getRecentBlindAccuracy(days = 7) {
+  const out = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const iso = toIsoDay(d);
+    const records = Object.values(state.blindAccuracy).filter((r) => r && r.firstDate === iso);
+    const level = records.length ? records[records.length - 1].first : null;
+    out.push({ date: iso, level });
+  }
+  return out;
+}
+
+function getMasteryDistribution() {
+  const dist = { 陌生: 0, 听过: 0, 一听就懂: 0, 能用出来: 0 };
+  state.phrases.forEach((item) => {
+    const record = state.reviewLog[item.en];
+    let mastery = "陌生";
+    if (record) {
+      if (record.repetitions >= 3) mastery = "一听就懂";
+      else if (record.repetitions >= 1) mastery = "听过";
+    }
+    if (state.spokenChunks.some((e) => (typeof e === "string" ? e : e.en) === item.en)) mastery = "能用出来";
+    dist[mastery] = (dist[mastery] || 0) + 1;
+  });
+  return dist;
+}
+
+function getSpokenChunksThisWeek() {
+  return state.spokenChunks.filter((entry) => {
+    if (typeof entry === "string") return false;
+    const at = entry && entry.at;
+    if (!at) return false;
+    const diff = (Date.now() - new Date(at).getTime()) / (1000 * 60 * 60 * 24);
+    return diff <= 7;
+  }).length;
 }
 
 function updateSessionChips() {
@@ -840,50 +1275,63 @@ function updateSessionChips() {
 }
 
 function saveLessonDrafts() {
+  const key = stageKey(selectedLessonDay);
   const blindBox = document.getElementById("blindNoteBox");
-  if (blindBox) state.blindNotes[String(selectedLessonDay)] = blindBox.value.trim();
+  if (blindBox) state.blindNotes[key] = blindBox.value.trim();
 
   const reflectionBox = document.getElementById("reflectionBox");
-  if (reflectionBox) state.notes[String(selectedLessonDay)] = reflectionBox.value.trim();
+  if (reflectionBox) state.notes[key] = reflectionBox.value.trim();
 }
 
 function renderToday() {
+  renderDashboard();
   const lesson = getLesson(selectedLessonDay);
   document.getElementById("currentDayNumber").textContent = lesson.day;
-  document.getElementById("todaySubtitle").textContent = `${lesson.title} · ${lesson.theme}`;
-  const completed = Boolean(state.completed[String(lesson.day)]);
+  const trackLabel = state.activeTrack === "warmup" ? "热身 · " : "Naval · ";
+  document.getElementById("todaySubtitle").textContent = `${trackLabel}${lesson.title} · ${lesson.theme}`;
+  const completedMap = getCompletedMap();
+  const completed = Boolean(completedMap[String(lesson.day)]);
   const stage = getLessonStage(lesson.day);
-  const savedNote = state.notes[String(lesson.day)] || "";
-  const savedBlindNote = state.blindNotes[String(lesson.day)] || "";
+  const key = stageKey(lesson.day);
+  const savedNote = state.notes[key] || "";
+  const savedBlindNote = state.blindNotes[key] || "";
   const lightMode = Number(state.sessionMinutes) === 5;
+  const accuracy = state.blindAccuracy[key] || {};
   const stageNames = [
     ["盲听优先", "只听声音"],
     ["精听对照", "看英文字幕"],
     ["同步理解", "听到即懂"],
-    ["口语复刻", "模仿输出"]
+    ["口语复刻", "模仿输出"],
+    ["终听验证", "再盲听一次"]
   ];
+  const highlightLevel = accuracy.first || "";
+  const showCn = stage >= 4;
   const phraseHtml = lesson.phrases
     .map(
-      ([en, cn]) => `
-        <div class="phrase-card">
+      ([en, cn]) => {
+        const highlight = stage === 2 && (highlightLevel === "懂大意" || highlightLevel === "几个词" || highlightLevel === "没听懂");
+        return `
+        <div class="phrase-card${highlight ? " phrase-highlight" : ""}">
           <div>
             <strong>${escapeHtml(en)}</strong>
-            <span>${stage >= 4 ? escapeHtml(cn) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
+            <span>${showCn ? escapeHtml(cn) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
           </div>
           <button class="phrase-save" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" aria-label="保存 ${escapeHtml(en)}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z" /></svg>
           </button>
         </div>
-      `
+      `;
+      }
     )
     .join("");
 
   const sentenceItems = (lightMode ? lesson.sentences.slice(0, 2) : lesson.sentences)
     .map(([en, cn, tip], index) => {
       const sentenceNumber = index + 1;
+      const isSpoken = state.spokenChunks.some((e) => (typeof e === "string" ? e : e.en) === en);
       return `
-        <div class="sentence-card">
-          <p class="step-count">Sentence ${sentenceNumber}</p>
+        <div class="sentence-card${isSpoken ? " sentence-spoken" : ""}">
+          <p class="step-count">Sentence ${sentenceNumber}${isSpoken ? " · 已开口" : ""}</p>
           <p class="en">${escapeHtml(en)}</p>
           ${stage >= 4 ? `<p class="cn">${escapeHtml(cn)}</p>` : ""}
           <p class="tip">${stage >= 4 ? escapeHtml(tip) : "听完立刻在脑中出现意思，不要先翻译成中文。"}</p>
@@ -898,9 +1346,9 @@ function renderToday() {
             </button>
             ${
               stage >= 4
-                ? `<button class="hold-button" data-shadow-text="${escapeHtml(en)}" data-shadow-index="${sentenceNumber}">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
-                    按住复刻
+                ? `<button class="hold-button" data-record-text="${escapeHtml(en)}" data-record-index="${sentenceNumber}">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
+                    按住录我念
                   </button>`
                 : ""
             }
@@ -917,6 +1365,14 @@ function renderToday() {
           <strong>${index + 1}. ${name}</strong>
           <span>${hint}</span>
         </button>
+      `
+    )
+    .join("");
+
+  const accuracyChips = ["全懂", "懂大意", "几个词", "没听懂"]
+    .map(
+      (level) => `
+        <button class="accuracy-chip ${accuracy.first === level ? "active" : ""}" data-blind-accuracy="first" data-level="${level}">${level}</button>
       `
     )
     .join("");
@@ -940,16 +1396,30 @@ function renderToday() {
         </button>
       </div>
       <textarea class="reflection-box" id="blindNoteBox" placeholder="可选：写下你听到的关键词或大意。不要查字幕。">${escapeHtml(savedBlindNote)}</textarea>
-      <button class="primary wide" data-set-stage="2">我听完了，进入精听对照</button>
+      <div class="self-assess">
+        <p class="muted">刚才那一遍你听到什么程度？</p>
+        <div class="chip-row">${accuracyChips}</div>
+      </div>
+      <button class="primary wide" data-set-stage="2" ${accuracy.first ? "" : "disabled"}>${accuracy.first ? "进入精听对照" : "选一档再继续"}</button>
     </section>
   `;
+
+  const highlightedPassage = renderPassageWithHighlights(lesson, highlightLevel);
+  const gapHint =
+    highlightLevel === "全懂"
+      ? "你说全懂——看英文核对一下，看看是不是真的连每个连读都听准了。"
+      : highlightLevel === "懂大意"
+      ? "你说懂大意——黄色的是核心语块，对一下刚才有没有听漏。"
+      : highlightLevel === "几个词"
+      ? "你说听到几个词——黄色的语块和橙色的句子，是你刚才大概率漏掉的。"
+      : "你说没听懂——这是正常的，先把高亮的整块和原文匹配上，再回去盲听一次。";
 
   const subtitleBlock = `
     <section class="lesson-block active-training">
       <p class="eyebrow">Step 2</p>
       <h3>精听对照</h3>
-      <p class="zh-note">现在只看英文字幕，对照刚才听到的声音。先用英文连接意思，中文解释先不放在眼前。</p>
-      <p class="passage">${escapeHtml(lesson.passage)}</p>
+      <p class="zh-note">${escapeHtml(gapHint)}</p>
+      <p class="passage">${highlightedPassage}</p>
       <div class="action-row">
         <button class="primary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.86">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
@@ -988,13 +1458,55 @@ function renderToday() {
     <section class="lesson-block active-training">
       <p class="eyebrow">Step 4</p>
       <h3>口语复刻</h3>
-      <p class="zh-note">先听一句，再按住“按住复刻”模仿说出来。重点不是录音打分，而是像婴儿学语一样复刻节奏、重音和停顿。</p>
+      <p class="zh-note">先听一句，再按住"按住录我念"模仿说出来。会弹出对照框：把你的波形和原文音节节奏带叠在一起，自己耳朵当评分器。</p>
       <div class="sentence-list">${sentenceItems}</div>
+      <div class="action-row">
+        <button class="primary" data-set-stage="5">进入终听验证</button>
+      </div>
     </section>
 
     <section class="lesson-block">
       <h3>语块收入语感库</h3>
       <div class="phrase-grid">${phraseHtml}</div>
+    </section>
+  `;
+
+  const finalAccuracyChips = ["全懂", "懂大意", "几个词", "没听懂"]
+    .map(
+      (level) => `
+        <button class="accuracy-chip ${accuracy.final === level ? "active" : ""}" data-blind-accuracy="final" data-level="${level}">${level}</button>
+      `
+    )
+    .join("");
+
+  const deltaHint =
+    accuracy.first && accuracy.final
+      ? accuracyDeltaSentence(accuracy.first, accuracy.final)
+      : "再选一次你现在的听感，和最开始的盲听对照一下——这就是今天的正反馈。";
+
+  const finalBlock = `
+    <section class="lesson-block active-training final-blind">
+      <p class="eyebrow">Step 5</p>
+      <h3>终听验证</h3>
+      <p class="zh-note">现在不要看英文，再听一遍完整段落。听完选一档，对照你最开始的盲听结果。</p>
+      <div class="blind-card">
+        <p class="blind-title">不要打开字幕。这次的目的是感受变化。</p>
+      </div>
+      <div class="action-row">
+        <button class="primary" data-speak="${escapeHtml(lesson.passage)}" data-rate="0.95">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          终听正常速
+        </button>
+        <button class="secondary" data-record-text="${escapeHtml(lesson.passage)}" data-record-passage="1">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
+          按住整段录我念
+        </button>
+      </div>
+      <div class="self-assess">
+        <p class="muted">这一次你听到什么程度？</p>
+        <div class="chip-row">${finalAccuracyChips}</div>
+      </div>
+      <p class="delta-hint">${escapeHtml(deltaHint)}</p>
     </section>
 
     <section class="lesson-block complete-panel">
@@ -1019,7 +1531,8 @@ function renderToday() {
     1: "今天先不看文字，只用耳朵进入这段英文。",
     2: "现在看英文字幕，把声音和英文意思接起来。",
     3: "逐句训练听到就懂，尽量跳过中文翻译。",
-    4: lesson.idea
+    4: lesson.idea,
+    5: "再盲听一次，对照最开始那遍——这是今天的正反馈。"
   };
 
   lessonPanel.innerHTML = `
@@ -1037,23 +1550,77 @@ function renderToday() {
     ${stage === 2 ? subtitleBlock : ""}
     ${stage === 3 ? syncBlock : ""}
     ${stage === 4 ? shadowBlock : ""}
+    ${stage === 5 ? finalBlock : ""}
   `;
 }
 
+function renderPassageWithHighlights(lesson, level) {
+  let html = escapeHtml(lesson.passage);
+  if (!level || level === "全懂") return html;
+  const phraseList = lesson.phrases.map(([en]) => en).sort((a, b) => b.length - a.length);
+  phraseList.forEach((phrase) => {
+    const safe = escapeHtml(phrase);
+    const escaped = safe.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`(${escaped})`, "gi");
+    html = html.replace(re, '<mark class="hl-phrase">$1</mark>');
+  });
+  if (level === "几个词" || level === "没听懂") {
+    lesson.sentences.forEach(([en]) => {
+      const safe = escapeHtml(en);
+      const escaped = safe.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`(${escaped})`);
+      html = html.replace(re, '<span class="hl-sentence">$1</span>');
+    });
+  }
+  return html;
+}
+
+function accuracyDeltaSentence(first, final) {
+  const order = { "没听懂": 0, "几个词": 1, "懂大意": 2, "全懂": 3 };
+  const a = order[first] ?? 0;
+  const b = order[final] ?? 0;
+  if (b > a) return `从"${first}"到"${final}"——这就是今天大脑长出的听感。`;
+  if (b === a) return `两次都是"${first}"——继续往前走，听感的变化常常在第 3-5 课后才明显。`;
+  return `回退了一档——大概率是这段语速比你目前的舒适区高半拍。明天可以多回听一次再继续。`;
+}
+
 function renderCourseList() {
-  lessonList.innerHTML = LESSONS.map((lesson) => {
-    const done = Boolean(state.completed[String(lesson.day)]);
-    return `
-      <button class="lesson-card" data-open-lesson="${lesson.day}">
-        <span class="day-badge">${lesson.day}</span>
-        <span>
-          <strong>${escapeHtml(lesson.title)}</strong>
-          <span>${escapeHtml(lesson.theme)}</span>
-        </span>
-        <span class="status-dot ${done ? "done" : ""}" aria-label="${done ? "已完成" : "未完成"}"></span>
+  const warmupDone = isWarmupComplete();
+  const trackTabs = `
+    <div class="track-tabs">
+      <button class="track-tab ${state.activeTrack === "warmup" ? "active" : ""}" data-switch-track="warmup">
+        热身 · 7 天
       </button>
-    `;
-  }).join("");
+      <button class="track-tab ${state.activeTrack === "naval" ? "active" : ""}" data-switch-track="naval">
+        Naval · 30 天
+      </button>
+    </div>
+  `;
+
+  const lockHint = !warmupDone && state.activeTrack === "naval"
+    ? `<p class="lock-hint">⚠️ 建议先完成 7 天热身再来 Naval，听感会差很多。仍想试可以点开。</p>`
+    : "";
+
+  const lessons = getActiveLessons();
+  const completedMap = getCompletedMap();
+
+  const items = lessons
+    .map((lesson) => {
+      const done = Boolean(completedMap[String(lesson.day)]);
+      return `
+        <button class="lesson-card" data-open-lesson="${lesson.day}">
+          <span class="day-badge">${lesson.day}</span>
+          <span>
+            <strong>${escapeHtml(lesson.title)}</strong>
+            <span>${escapeHtml(lesson.theme)}</span>
+          </span>
+          <span class="status-dot ${done ? "done" : ""}" aria-label="${done ? "已完成" : "未完成"}"></span>
+        </button>
+      `;
+    })
+    .join("");
+
+  lessonList.innerHTML = `${trackTabs}${lockHint}${items}`;
 }
 
 function renderPhrases() {
@@ -1080,34 +1647,105 @@ function renderPhrases() {
 }
 
 function renderReview() {
-  const due = getDuePhrases();
+  const due = getDueReviews();
   if (!due.length) {
-    reviewPanel.innerHTML = `<p class="empty">今天没有到期语块。保存几个表达后，这里会自动安排复习。</p>`;
+    reviewPanel.innerHTML = `<p class="empty">今天没有到期语块。保存几个表达后，这里会自动安排复习。<br><span class="muted">间隔重复让大脑在快忘记的瞬间复盘——这是 SRS 的核心。</span></p>`;
     return;
   }
 
   reviewPanel.innerHTML = due
-    .map(
-      (item) => `
-        <div class="review-card">
-          <strong>${escapeHtml(item.en)}</strong>
+    .map((item) => {
+      const record = state.reviewLog[item.en] || {};
+      const mastery = deriveMastery(item.en, record);
+      const isSpoken = state.spokenChunks.some((e) => (typeof e === "string" ? e : e.en) === item.en);
+      const intervalLabel = record.interval ? `下次 ${record.interval} 天后` : "首次复习";
+      return `
+        <div class="review-card mastery-${mastery}">
+          <div class="review-head">
+            <strong>${escapeHtml(item.en)}</strong>
+            <span class="mastery-tag">${mastery}</span>
+          </div>
           <p>${escapeHtml(item.cn)}</p>
+          <p class="muted small">${intervalLabel} · 已复习 ${record.repetitions || 0} 次</p>
           <div class="action-row">
             <button class="play-button" data-speak="${escapeHtml(item.en)}" data-rate="0.82">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
               听一遍
             </button>
-            <button class="secondary" data-review-done="${escapeHtml(item.en)}">今天会了</button>
+            <button class="hold-button compact" data-record-text="${escapeHtml(item.en)}" data-record-index="review">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" /></svg>
+              ${isSpoken ? "再录一遍" : "按住说一遍"}
+            </button>
+          </div>
+          <div class="grade-row">
+            <button class="grade-chip grade-stuck" data-review-grade="${escapeHtml(item.en)}" data-grade="stuck">卡壳</button>
+            <button class="grade-chip grade-ok" data-review-grade="${escapeHtml(item.en)}" data-grade="ok">会了</button>
+            <button class="grade-chip grade-easy" data-review-grade="${escapeHtml(item.en)}" data-grade="easy">一听就懂</button>
           </div>
         </div>
-      `
-    )
+      `;
+    })
     .join("");
 }
 
-function getDuePhrases() {
-  const today = new Date().toDateString();
-  return state.phrases.filter((item) => state.reviewLog[item.en] !== today).slice(0, 12);
+function getDueReviews() {
+  const today = todayIso();
+  return state.phrases
+    .filter((item) => {
+      const record = state.reviewLog[item.en];
+      if (!record) return true;
+      return !record.dueDate || record.dueDate <= today;
+    })
+    .sort((a, b) => {
+      const ra = state.reviewLog[a.en];
+      const rb = state.reviewLog[b.en];
+      const da = ra && ra.dueDate ? ra.dueDate : "0000-00-00";
+      const db = rb && rb.dueDate ? rb.dueDate : "0000-00-00";
+      return da.localeCompare(db);
+    })
+    .slice(0, 20);
+}
+
+function deriveMastery(en, record) {
+  if (state.spokenChunks.some((e) => (typeof e === "string" ? e : e.en) === en)) return "能用出来";
+  if (!record || !record.repetitions) return "陌生";
+  if (record.repetitions >= 3) return "一听就懂";
+  return "听过";
+}
+
+function updateSrsCard(en, grade) {
+  const today = todayIso();
+  const prev = state.reviewLog[en] || {
+    ef: 2.5,
+    interval: 1,
+    repetitions: 0,
+    dueDate: today,
+    lastReviewed: null,
+    mastery: "陌生"
+  };
+  let { ef, interval, repetitions } = prev;
+  if (grade === "stuck") {
+    ef = Math.max(1.3, ef - 0.2);
+    repetitions = 0;
+    interval = 1;
+  } else if (grade === "ok") {
+    repetitions += 1;
+    const ladder = [1, 3, 7, 15, 30, 60];
+    interval = ladder[Math.min(repetitions, ladder.length - 1)];
+  } else if (grade === "easy") {
+    ef = Math.min(3.5, ef + 0.15);
+    repetitions += 1;
+    interval = Math.max(2, Math.round((interval || 1) * ef));
+  }
+  state.reviewLog[en] = {
+    ef,
+    interval,
+    repetitions,
+    dueDate: addDays(today, interval),
+    lastReviewed: today,
+    mastery: deriveMastery(en, { repetitions })
+  };
+  saveState();
 }
 
 function savePhrase(en, cn) {
@@ -1137,9 +1775,11 @@ function openView(viewId) {
 
 function completeCurrentLesson() {
   saveLessonDrafts();
-  state.completed[String(selectedLessonDay)] = new Date().toISOString();
-  state.lessonStages[String(selectedLessonDay)] = 4;
-  state.selectedLessonDay = selectedLessonDay;
+  const completedMap = getCompletedMap();
+  const stages = getStagesMap();
+  completedMap[String(selectedLessonDay)] = new Date().toISOString();
+  stages[String(selectedLessonDay)] = 5;
+  setActiveSelectedDay(selectedLessonDay);
   saveState();
   renderAll();
   showToast("今日完成，明天继续复利。");
@@ -1147,9 +1787,32 @@ function completeCurrentLesson() {
 
 function goNextLesson() {
   saveLessonDrafts();
-  selectedLessonDay = selectedLessonDay >= LESSONS.length ? 1 : selectedLessonDay + 1;
-  state.selectedLessonDay = selectedLessonDay;
-  state.lessonStages[String(selectedLessonDay)] ||= 1;
+  const lessons = getActiveLessons();
+  if (selectedLessonDay >= lessons[lessons.length - 1].day) {
+    if (state.activeTrack === "warmup") {
+      state.activeTrack = "naval";
+      selectedLessonDay = state.selectedLessonDay || 1;
+      showToast("热身完成，进入 30 天 Naval。");
+    } else {
+      selectedLessonDay = 1;
+    }
+  } else {
+    selectedLessonDay = selectedLessonDay + 1;
+  }
+  setActiveSelectedDay(selectedLessonDay);
+  const stages = getStagesMap();
+  stages[String(selectedLessonDay)] ||= 1;
+  saveState();
+  renderAll();
+  openView("todayView");
+}
+
+function switchTrack(track) {
+  saveLessonDrafts();
+  if (track !== "warmup" && track !== "naval") return;
+  state.activeTrack = track;
+  selectedLessonDay = getActiveSelectedDay() || getFirstOpenDay();
+  setActiveSelectedDay(selectedLessonDay);
   saveState();
   renderAll();
   openView("todayView");
@@ -1290,40 +1953,220 @@ async function copyVideoPrompt(target) {
   }
 }
 
-function startShadowing(button) {
-  window.clearInterval(shadowTimer);
-  const startedAt = Date.now();
+async function startRecording(button) {
+  if (mediaRecorder && mediaRecorder.state === "recording") return;
+  const text = button.dataset.recordText || "";
+  recordingForText = text;
+  recordedChunks = [];
+
+  try {
+    recordingStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    showToast("没拿到麦克风权限。在 Safari 里允许一下。");
+    return;
+  }
+
+  const mimeCandidates = ["audio/webm", "audio/mp4", "audio/aac"];
+  const supported = mimeCandidates.find((m) => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m));
+  try {
+    mediaRecorder = new MediaRecorder(recordingStream, supported ? { mimeType: supported } : undefined);
+  } catch {
+    mediaRecorder = new MediaRecorder(recordingStream);
+  }
+  mediaRecorder.ondataavailable = (event) => {
+    if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+  };
+  mediaRecorder.onstop = () => {
+    const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+    if (recordingStream) {
+      recordingStream.getTracks().forEach((t) => t.stop());
+      recordingStream = null;
+    }
+    showWaveformDialog(blob, recordingForText);
+  };
+
   activeShadowButton = button;
   button.classList.add("recording");
-  button.dataset.originalText = button.textContent.trim();
+  button.dataset.originalText = button.innerHTML;
   button.innerHTML = `
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
-    复刻中 0s
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="currentColor"/></svg>
+    录音中...
   `;
-  shadowTimer = window.setInterval(() => {
-    const seconds = Math.floor((Date.now() - startedAt) / 1000);
-    button.innerHTML = `
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
-      复刻中 ${seconds}s
-    `;
-  }, 500);
+  mediaRecorder.start();
 }
 
-function stopShadowing(button) {
-  if (!button.classList.contains("recording")) return;
-  window.clearInterval(shadowTimer);
-  activeShadowButton = null;
-  button.classList.remove("recording");
-  button.innerHTML = `
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18" /><path d="M8 7v10" /><path d="M16 7v10" /></svg>
-    按住复刻
-  `;
-  showToast("很好。再听原句，对照节奏。");
+function stopRecording() {
+  if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+  mediaRecorder.stop();
+  if (activeShadowButton) {
+    activeShadowButton.classList.remove("recording");
+    if (activeShadowButton.dataset.originalText) {
+      activeShadowButton.innerHTML = activeShadowButton.dataset.originalText;
+    }
+    activeShadowButton = null;
+  }
+}
+
+async function showWaveformDialog(blob, originalText) {
+  const dialog = document.getElementById("recordingDialog");
+  if (!dialog) return;
+  const canvas = document.getElementById("waveformCanvas");
+  const userAudio = document.getElementById("recordingUserAudio");
+  const targetSpan = document.getElementById("recordingTargetText");
+  const satisfyButton = document.getElementById("recordingSatisfyButton");
+
+  targetSpan.textContent = originalText;
+  satisfyButton.dataset.targetText = originalText;
+
+  const userUrl = URL.createObjectURL(blob);
+  if (userAudio.src) URL.revokeObjectURL(userAudio.src);
+  userAudio.src = userUrl;
+
+  let userSamples = new Float32Array(0);
+  try {
+    const arrayBuf = await blob.arrayBuffer();
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const audioBuf = await ctx.decodeAudioData(arrayBuf.slice(0));
+    userSamples = downsample(audioBuf.getChannelData(0), 320);
+    await ctx.close();
+  } catch (err) {
+    console.warn("decode failed", err);
+  }
+
+  const pulseSamples = getSyllablePulses(originalText, 320);
+  drawWaveformOverlay(canvas, userSamples, pulseSamples);
+
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+}
+
+function downsample(channelData, targetLength) {
+  if (!channelData || channelData.length === 0) return new Float32Array(targetLength);
+  const blockSize = channelData.length / targetLength;
+  const out = new Float32Array(targetLength);
+  for (let i = 0; i < targetLength; i++) {
+    const start = Math.floor(i * blockSize);
+    const end = Math.min(channelData.length, Math.floor((i + 1) * blockSize));
+    let sum = 0;
+    let count = 0;
+    for (let j = start; j < end; j++) {
+      sum += Math.abs(channelData[j]);
+      count++;
+    }
+    out[i] = count > 0 ? sum / count : 0;
+  }
+  let max = 0;
+  for (let i = 0; i < out.length; i++) if (out[i] > max) max = out[i];
+  if (max > 0) for (let i = 0; i < out.length; i++) out[i] /= max;
+  return out;
+}
+
+function countSyllables(word) {
+  const w = word.toLowerCase().replace(/[^a-z]/g, "");
+  if (!w) return 0;
+  const matches = w.match(/[aeiouy]+/g);
+  let n = matches ? matches.length : 1;
+  if (w.endsWith("e") && n > 1) n -= 1;
+  return Math.max(1, n);
+}
+
+function getSyllablePulses(text, length) {
+  const tokens = text.replace(/[—–-]/g, " ").split(/\s+/).filter(Boolean);
+  if (!tokens.length) return new Float32Array(length);
+  const beats = [];
+  tokens.forEach((tok, idx) => {
+    const sylls = countSyllables(tok);
+    for (let i = 0; i < sylls; i++) beats.push({ stress: i === 0 && /[A-Z]/.test(tok[0]) ? 1 : 0.7, token: tok });
+    if (idx < tokens.length - 1 && /[.,!?;:]$/.test(tok)) beats.push({ stress: 0, gap: true });
+  });
+  const totalBeats = beats.length;
+  const out = new Float32Array(length);
+  const beatWidth = length / totalBeats;
+  beats.forEach((beat, i) => {
+    if (beat.gap) return;
+    const center = Math.floor((i + 0.5) * beatWidth);
+    const halfWidth = Math.max(3, Math.floor(beatWidth * 0.4));
+    for (let x = -halfWidth; x <= halfWidth; x++) {
+      const idx = center + x;
+      if (idx < 0 || idx >= length) continue;
+      const env = Math.cos((x / halfWidth) * (Math.PI / 2));
+      out[idx] = Math.max(out[idx], env * beat.stress);
+    }
+  });
+  return out;
+}
+
+function drawWaveformOverlay(canvas, userSamples, refSamples) {
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.strokeStyle = "rgba(0,0,0,0.08)";
+  ctx.beginPath();
+  ctx.moveTo(0, H / 2);
+  ctx.lineTo(W, H / 2);
+  ctx.stroke();
+
+  const drawBars = (samples, color, side) => {
+    if (!samples || !samples.length) return;
+    ctx.fillStyle = color;
+    const barW = W / samples.length;
+    for (let i = 0; i < samples.length; i++) {
+      const h = samples[i] * (H * 0.45);
+      const x = i * barW;
+      if (side === "up") ctx.fillRect(x, H / 2 - h, Math.max(1, barW - 0.5), h);
+      else ctx.fillRect(x, H / 2, Math.max(1, barW - 0.5), h);
+    }
+  };
+
+  drawBars(userSamples, "#3490dc", "up");
+  drawBars(refSamples, "#f5a623", "down");
+
+  ctx.fillStyle = "#3490dc";
+  ctx.font = "12px system-ui";
+  ctx.fillText("你（蓝）", 8, 14);
+  ctx.fillStyle = "#f5a623";
+  ctx.fillText("原文节奏（橙）", 8, H - 6);
+}
+
+function markSpoken(en) {
+  if (!en) return;
+  const list = state.spokenChunks;
+  const exists = list.findIndex((e) => (typeof e === "string" ? e : e.en) === en);
+  if (exists >= 0) list.splice(exists, 1);
+  list.unshift({ en, at: new Date().toISOString() });
+  saveState();
 }
 
 document.addEventListener("click", (event) => {
+  const trackButton = event.target.closest("[data-switch-track]");
+  if (trackButton) {
+    switchTrack(trackButton.dataset.switchTrack);
+    return;
+  }
+
+  const accuracyButton = event.target.closest("[data-blind-accuracy]");
+  if (accuracyButton) {
+    const which = accuracyButton.dataset.blindAccuracy;
+    const level = accuracyButton.dataset.level;
+    const key = stageKey(selectedLessonDay);
+    state.blindAccuracy[key] = state.blindAccuracy[key] || {};
+    state.blindAccuracy[key][which] = level;
+    if (which === "first") {
+      state.blindAccuracy[key].firstDate = todayIso();
+    } else if (which === "final") {
+      state.blindAccuracy[key].finalDate = todayIso();
+    }
+    saveState();
+    renderToday();
+    return;
+  }
+
   const stageButton = event.target.closest("[data-set-stage]");
   if (stageButton) {
+    if (stageButton.hasAttribute("disabled")) return;
     setLessonStage(selectedLessonDay, Number(stageButton.dataset.setStage));
     return;
   }
@@ -1350,12 +2193,12 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  const reviewButton = event.target.closest("[data-review-done]");
-  if (reviewButton) {
-    state.reviewLog[reviewButton.dataset.reviewDone] = new Date().toDateString();
-    saveState();
+  const gradeButton = event.target.closest("[data-review-grade]");
+  if (gradeButton) {
+    updateSrsCard(gradeButton.dataset.reviewGrade, gradeButton.dataset.grade);
     renderReview();
-    showToast("今天已复习。");
+    renderDashboard();
+    showToast(gradeButton.dataset.grade === "stuck" ? "明天再见。" : gradeButton.dataset.grade === "easy" ? "走远一点。" : "稳住。");
     return;
   }
 
@@ -1363,7 +2206,7 @@ document.addEventListener("click", (event) => {
   if (lessonButton) {
     saveLessonDrafts();
     selectedLessonDay = Number(lessonButton.dataset.openLesson);
-    state.selectedLessonDay = selectedLessonDay;
+    setActiveSelectedDay(selectedLessonDay);
     saveState();
     renderAll();
     openView("todayView");
@@ -1394,28 +2237,58 @@ document.addEventListener("click", (event) => {
 
   if (event.target.closest("#nextLessonButton")) {
     goNextLesson();
+    return;
+  }
+
+  if (event.target.closest("#recordingReplayButton")) {
+    const audio = document.getElementById("recordingUserAudio");
+    if (audio) audio.play();
+    return;
+  }
+
+  if (event.target.closest("#recordingPlayOriginalButton")) {
+    speak(document.getElementById("recordingTargetText").textContent, 0.92);
+    return;
+  }
+
+  const satisfyBtn = event.target.closest("#recordingSatisfyButton");
+  if (satisfyBtn) {
+    const target = satisfyBtn.dataset.targetText;
+    if (target) markSpoken(target);
+    const dialog = document.getElementById("recordingDialog");
+    if (dialog && dialog.close) dialog.close();
+    renderToday();
+    renderReview();
+    renderDashboard();
+    showToast("已计入「能开口语块」。");
+    return;
+  }
+
+  const closeBtn = event.target.closest("#recordingCloseButton");
+  if (closeBtn) {
+    const dialog = document.getElementById("recordingDialog");
+    if (dialog && dialog.close) dialog.close();
   }
 });
 
 document.addEventListener("pointerdown", (event) => {
-  const holdButton = event.target.closest("[data-shadow-text]");
+  const holdButton = event.target.closest("[data-record-text]");
   if (!holdButton) return;
   event.preventDefault();
-  startShadowing(holdButton);
+  startRecording(holdButton);
 });
 
-document.addEventListener("pointerup", (event) => {
-  const holdButton = event.target.closest("[data-shadow-text]") || activeShadowButton;
-  if (holdButton) stopShadowing(holdButton);
+document.addEventListener("pointerup", () => {
+  if (activeShadowButton) stopRecording();
 });
 
 document.addEventListener("pointercancel", () => {
-  document.querySelectorAll(".hold-button.recording").forEach(stopShadowing);
+  if (activeShadowButton) stopRecording();
 });
 
 document.addEventListener("pointerleave", (event) => {
-  const holdButton = event.target.closest?.("[data-shadow-text]");
-  if (holdButton) stopShadowing(holdButton);
+  const holdButton = event.target.closest?.("[data-record-text]");
+  if (holdButton && activeShadowButton) stopRecording();
 });
 
 document.getElementById("buildClipButton").addEventListener("click", analyzeClip);

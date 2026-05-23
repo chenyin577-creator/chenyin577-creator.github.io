@@ -221,7 +221,7 @@ svg {
 
 .method-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: #fbfcfd;
@@ -733,5 +733,383 @@ dialog::backdrop {
 
   .method-step:last-child {
     border-bottom: 0;
+  }
+}
+
+/* === engines 改造：仪表盘 / 自评 / 高亮 / SRS / 录音 === */
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 0 4px 14px;
+}
+
+.dashboard-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 12px 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 110px;
+}
+
+.dashboard-card .eyebrow {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.dashboard-card .card-foot {
+  margin: 0;
+  font-size: 11px;
+}
+
+.dashboard-card .big-number {
+  margin: 6px 0 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1;
+}
+
+.bar-chart {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 52px;
+  margin-top: 2px;
+}
+
+.bar-slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-slot .bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  background: var(--line);
+  min-height: 4px;
+}
+
+.bar-slot span {
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.stacked-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.stack-seg {
+  display: block;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-card {
+    min-height: auto;
+  }
+}
+
+/* 自评 chip */
+.self-assess {
+  margin-top: 14px;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.accuracy-chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.accuracy-chip:hover {
+  border-color: var(--teal);
+}
+
+.accuracy-chip.active {
+  background: var(--teal);
+  color: white;
+  border-color: var(--teal);
+}
+
+/* 字幕高亮 */
+.phrase-highlight {
+  background: #fff7e1;
+  border-color: #f5a623;
+}
+
+mark.hl-phrase {
+  background: #fff2c1;
+  color: var(--ink);
+  padding: 0 3px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.hl-sentence {
+  display: inline;
+  background: linear-gradient(180deg, transparent 60%, rgba(245, 166, 35, 0.35) 60%);
+}
+
+.passage {
+  line-height: 1.85;
+}
+
+/* primary disabled */
+button.primary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+button.primary.wide {
+  width: 100%;
+}
+
+/* 终听 block */
+.final-blind {
+  background: linear-gradient(180deg, #f0f6f5, transparent);
+}
+
+.delta-hint {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-radius: 10px;
+  color: var(--teal-deep);
+  font-weight: 500;
+}
+
+/* track tab */
+.track-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.track-tab {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.track-tab.active {
+  background: var(--teal);
+  color: white;
+  border-color: var(--teal);
+}
+
+.lock-hint {
+  padding: 10px 12px;
+  margin: 0 0 10px;
+  background: #fff7e1;
+  border: 1px solid #f5a623;
+  border-radius: 10px;
+  color: var(--gold);
+  font-size: 13px;
+}
+
+/* SRS 复习卡 */
+.review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mastery-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.review-card.mastery-能用出来 .mastery-tag {
+  background: #e1f0fa;
+  color: #2a76b8;
+}
+
+.review-card.mastery-一听就懂 .mastery-tag {
+  background: #e1f4ea;
+  color: var(--green);
+}
+
+.review-card.mastery-听过 .mastery-tag {
+  background: #fff2c1;
+  color: var(--gold);
+}
+
+.review-card .small {
+  font-size: 11px;
+  margin: 2px 0 8px;
+}
+
+.grade-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.grade-chip {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.grade-stuck {
+  color: var(--coral);
+}
+.grade-stuck:hover {
+  background: #fdebe6;
+}
+.grade-ok {
+  color: var(--teal-deep);
+}
+.grade-ok:hover {
+  background: #e6f3f1;
+}
+.grade-easy {
+  color: var(--green);
+}
+.grade-easy:hover {
+  background: #e1f4ea;
+}
+
+.hold-button.compact {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.sentence-spoken {
+  border-color: #3490dc;
+  background: #f4faff;
+}
+
+/* 录音对话框 */
+.recording-dialog {
+  border: none;
+  border-radius: 18px;
+  padding: 0;
+  max-width: 92vw;
+  width: 680px;
+  box-shadow: var(--shadow);
+}
+
+.recording-dialog::backdrop {
+  background: rgba(24, 33, 47, 0.4);
+}
+
+.recording-dialog .dialog-inner {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recording-target {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.recording-target span {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.waveform-canvas {
+  width: 100%;
+  height: 180px;
+  background: #fbfcfd;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+#recordingUserAudio {
+  width: 100%;
+}
+
+.recording-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.recording-controls button {
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* 录音中状态 */
+.hold-button.recording {
+  background: var(--coral);
+  color: white;
+  border-color: var(--coral);
+}
+
+@media (max-width: 370px) {
+  .method-strip {
+    grid-template-columns: 1fr;
+  }
+  .grade-row {
+    grid-template-columns: 1fr;
+  }
+  .track-tabs {
+    grid-template-columns: 1fr;
   }
 }
