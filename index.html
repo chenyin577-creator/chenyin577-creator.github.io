@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260523-intuition" />
+    <link rel="stylesheet" href="styles.css?v=20260523-feedback" />
   </head>
   <body>
     <div class="app-shell">
@@ -20,12 +20,19 @@
           <p class="eyebrow">30 天专项</p>
           <h1>Naval 英语听力</h1>
         </div>
-        <button class="icon-button" id="installHelpButton" aria-label="安装提示">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
-            <path d="M5 14v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4" />
-          </svg>
-        </button>
+        <div class="topbar-right">
+          <div class="streak-badge" id="streakBadge" aria-label="连续打卡">
+            <span class="streak-flame">🔥</span>
+            <span class="streak-count" id="streakCount">0</span>
+            <span class="streak-suffix">天</span>
+          </div>
+          <button class="icon-button" id="installHelpButton" aria-label="安装提示">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
+              <path d="M5 14v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4" />
+            </svg>
+          </button>
+        </div>
       </header>
 
       <main>
@@ -164,6 +171,16 @@
       </div>
     </dialog>
 
+    <dialog id="highlightDialog" class="highlight-dialog">
+      <div class="dialog-inner highlight-inner">
+        <div id="highlightContent"></div>
+        <div class="action-row">
+          <button class="primary" id="highlightCloseButton">收下，明天再来</button>
+          <button class="secondary" id="highlightNextLessonButton">直接进入下一课</button>
+        </div>
+      </div>
+    </dialog>
+
     <dialog id="recordingDialog" class="recording-dialog">
       <div class="dialog-inner">
         <h2>对照你的发声</h2>
@@ -189,6 +206,6 @@
       </div>
     </dialog>
 
-    <script src="app.js?v=20260523-intuition" defer></script>
+    <script src="app.js?v=20260523-feedback" defer></script>
   </body>
 </html>

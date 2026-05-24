@@ -980,7 +980,7 @@ const toast = document.getElementById("toast");
 
 function loadState() {
   const defaults = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     completed: {},
     notes: {},
     blindNotes: {},
@@ -994,7 +994,12 @@ function loadState() {
     warmupStages: {},
     warmupSelectedDay: 1,
     blindAccuracy: {},
-    spokenChunks: []
+    spokenChunks: [],
+    streak: 0,
+    longestStreak: 0,
+    lastCompletedDate: null,
+    bonusLinks: {},
+    highlightSeenForKey: null
   };
 
   let saved = {};
@@ -1038,6 +1043,14 @@ function migrateState(s) {
     if (!s.blindAccuracy) s.blindAccuracy = {};
     if (!Array.isArray(s.spokenChunks)) s.spokenChunks = [];
     s.schemaVersion = 2;
+  }
+  if (s.schemaVersion < 3) {
+    if (typeof s.streak !== "number") s.streak = 0;
+    if (typeof s.longestStreak !== "number") s.longestStreak = 0;
+    if (typeof s.lastCompletedDate === "undefined") s.lastCompletedDate = null;
+    if (!s.bonusLinks) s.bonusLinks = {};
+    if (typeof s.highlightSeenForKey === "undefined") s.highlightSeenForKey = null;
+    s.schemaVersion = 3;
   }
   return s;
 }
@@ -1183,6 +1196,26 @@ function renderAll() {
   renderReview();
   updateSessionChips();
   updateProgress();
+  updateStreakBadge();
+}
+
+function updateStreakBadge() {
+  const el = document.getElementById("streakCount");
+  const badge = document.getElementById("streakBadge");
+  if (!el || !badge) return;
+  const today = todayIso();
+  const yesterday = addDays(today, -1);
+  let live = state.streak || 0;
+  if (state.lastCompletedDate && state.lastCompletedDate !== today && state.lastCompletedDate !== yesterday) live = 0;
+  el.textContent = live;
+  badge.classList.toggle("streak-cold", live === 0);
+  badge.classList.toggle("streak-hot", live >= 3);
+  badge.classList.toggle("streak-blaze", live >= 7);
+  badge.setAttribute("title", live === 0
+    ? "今天打卡就开始连续记录"
+    : state.lastCompletedDate === today
+    ? `今天已完成，已连续 ${live} 天`
+    : `昨天最后一次打卡，连续 ${live} 天还能续上`);
 }
 
 function updateProgress() {
@@ -1332,9 +1365,14 @@ function renderToday() {
             <span class="phrase-intuition">${showCn ? escapeHtml(primary) : "先用声音和英文场景理解，中文意思稍后再看。"}</span>
             ${showCn && secondary ? `<span class="phrase-cn-aside">${escapeHtml(secondary)}</span>` : ""}
           </div>
-          <button class="phrase-save" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" data-intuition="${escapeHtml(intuition || "")}" aria-label="保存 ${escapeHtml(en)}">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z" /></svg>
-          </button>
+          <div class="phrase-actions">
+            <button class="phrase-icon" data-deep-dive="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" title="让豆包讲透这一个" aria-label="讲透 ${escapeHtml(en)}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 8v5" /><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>
+            </button>
+            <button class="phrase-icon" data-save-phrase="${escapeHtml(en)}" data-meaning="${escapeHtml(cn)}" data-intuition="${escapeHtml(intuition || "")}" title="存进语块本" aria-label="保存 ${escapeHtml(en)}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16l-7-3-7 3z" /></svg>
+            </button>
+          </div>
         </div>
       `;
       }
@@ -1500,6 +1538,40 @@ function renderToday() {
       ? accuracyDeltaSentence(accuracy.first, accuracy.final)
       : "再选一次你现在的听感，和最开始的盲听对照一下——这就是今天的正反馈。";
 
+  const bonusKey = stageKey(lesson.day);
+  const bonus = state.bonusLinks[bonusKey] || null;
+  const bonusBlock = `
+    <section class="lesson-block bonus-panel">
+      <p class="eyebrow">接着看</p>
+      <h3>今天学的东西，去野外见一面</h3>
+      <p class="zh-note">让豆包根据你今天学的语块，推荐一个 2-3 分钟真实场景的英文短片。听完你会发现：刚才的语块在母语者嘴里就是这样跑出来的。</p>
+      <div class="action-row">
+        <button class="primary" id="copyBonusPromptButton">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8z" /><path d="M6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+          复制推荐提示词给豆包
+        </button>
+      </div>
+      <label class="bonus-input">
+        <span>把豆包给的视频链接粘贴回来：</span>
+        <input id="bonusLinkInput" type="url" inputmode="url" placeholder="https://..." value="${escapeHtml(bonus ? bonus.url : "")}" />
+      </label>
+      <div class="action-row">
+        <button class="secondary compact" id="saveBonusLinkButton">保存链接</button>
+        ${bonus && bonus.url ? `<a class="bonus-go" href="${escapeHtml(bonus.url)}" target="_blank" rel="noopener noreferrer">打开视频 ↗</a>` : ""}
+      </div>
+      ${bonus && bonus.url ? `
+        <div class="self-assess">
+          <p class="muted">看完之后，刚学的语块在野外你听出了几个？</p>
+          <div class="chip-row">
+            ${["都没听出", "听出 1-2 个", "大部分听出", "全部秒懂"].map((l) => `
+              <button class="accuracy-chip ${bonus.reaction === l ? "active" : ""}" data-bonus-reaction="${escapeHtml(l)}">${l}</button>
+            `).join("")}
+          </div>
+        </div>
+      ` : ""}
+    </section>
+  `;
+
   const finalBlock = `
     <section class="lesson-block active-training final-blind">
       <p class="eyebrow">Step 5</p>
@@ -1524,6 +1596,8 @@ function renderToday() {
       </div>
       <p class="delta-hint">${escapeHtml(deltaHint)}</p>
     </section>
+
+    ${bonusBlock}
 
     <section class="lesson-block complete-panel">
       <h3>最后复盘</h3>
@@ -1803,12 +1877,89 @@ function completeCurrentLesson() {
   saveLessonDrafts();
   const completedMap = getCompletedMap();
   const stages = getStagesMap();
+  const alreadyCompletedToday = state.lastCompletedDate === todayIso();
   completedMap[String(selectedLessonDay)] = new Date().toISOString();
   stages[String(selectedLessonDay)] = 5;
   setActiveSelectedDay(selectedLessonDay);
+  updateStreakOnComplete();
   saveState();
   renderAll();
-  showToast("今日完成，明天继续复利。");
+  if (!alreadyCompletedToday) {
+    showHighlightDialog();
+  } else {
+    showToast("今日已完成过一次，再保存一次进度。");
+  }
+}
+
+function updateStreakOnComplete() {
+  const today = todayIso();
+  if (state.lastCompletedDate === today) return;
+  const yesterday = addDays(today, -1);
+  if (state.lastCompletedDate === yesterday) state.streak = (state.streak || 0) + 1;
+  else state.streak = 1;
+  state.longestStreak = Math.max(state.longestStreak || 0, state.streak);
+  state.lastCompletedDate = today;
+}
+
+function showHighlightDialog() {
+  const dialog = document.getElementById("highlightDialog");
+  if (!dialog) return;
+  const lesson = getLesson(selectedLessonDay);
+  const key = stageKey(lesson.day);
+  const acc = state.blindAccuracy[key] || {};
+  const order = { "没听懂": 0, "几个词": 1, "懂大意": 2, "全懂": 3 };
+  const diff = (order[acc.final] ?? 0) - (order[acc.first] ?? 0);
+  const arrow = diff > 0 ? "▲ +" + diff + " 档" : diff < 0 ? "▼ " + diff + " 档" : "持平";
+  const dist = getMasteryDistribution();
+  const spokenWeek = getSpokenChunksThisWeek();
+  const streakLine = state.streak >= 7
+    ? `🔥 ${state.streak} 天打卡 — 听感开始变成肌肉`
+    : state.streak >= 3
+    ? `🔥 连续 ${state.streak} 天 — 节奏起来了`
+    : `🔥 连续 ${state.streak} 天 — 明天再回来一次，就有 streak 了`;
+  const coachLine = getCoachLine(acc, dist, state.streak);
+  document.getElementById("highlightContent").innerHTML = `
+    <p class="hl-eyebrow">Day ${lesson.day} · ${escapeHtml(lesson.title)}</p>
+    <h3 class="hl-title">今日高光</h3>
+    <div class="hl-grid">
+      <div class="hl-cell">
+        <p class="hl-num">${escapeHtml(acc.first || "未测")}</p>
+        <p class="hl-label">首遍盲听</p>
+      </div>
+      <div class="hl-cell hl-arrow">
+        <p class="hl-num">${arrow}</p>
+        <p class="hl-label">变化</p>
+      </div>
+      <div class="hl-cell">
+        <p class="hl-num">${escapeHtml(acc.final || "未测")}</p>
+        <p class="hl-label">终听</p>
+      </div>
+    </div>
+    <div class="hl-stats">
+      <div><strong>${dist["能用出来"] || 0}</strong> · 能开口语块</div>
+      <div><strong>+${spokenWeek}</strong> · 本周新增</div>
+      <div><strong>${(dist["听过"] || 0) + (dist["一听就懂"] || 0)}</strong> · 听过/熟</div>
+    </div>
+    <p class="hl-streak">${streakLine}</p>
+    <p class="hl-coach">${escapeHtml(coachLine)}</p>
+  `;
+  state.highlightSeenForKey = key;
+  saveState();
+  if (typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open", "");
+}
+
+function getCoachLine(acc, dist, streak) {
+  const order = { "没听懂": 0, "几个词": 1, "懂大意": 2, "全懂": 3 };
+  const first = order[acc.first] ?? -1;
+  const final = order[acc.final] ?? -1;
+  if (final > first && final >= 2) return "今天大脑真的在长——下一课换个语速再试一次。";
+  if (final > first) return "听感在抬头。继续，第 3-5 课会有第一次明显的破壳。";
+  if (final === first && final >= 2) return "稳住，听感像复利——单日看不出，7 天回头看会变。";
+  if (final === first && final <= 1) return "今天像在打地基。明天重听一遍这段，再开新课。";
+  if (final < first) return "回退了一档——大概率这段语速踩到了你目前舒适区上方。明天多回听 2 次再继续。";
+  if (streak >= 7) return "你已经连了一周——这是 80% 人放弃的位置，你已经过了。";
+  return "今天动作完整，明天继续。";
 }
 
 function goNextLesson() {
@@ -1960,6 +2111,83 @@ async function copyDoubaoPrompt() {
   } catch {
     showToast("复制失败，可以手动选中文字复制。");
   }
+}
+
+async function copyDeepDivePrompt(phrase, meaning) {
+  const prompt = `请用画面感+空间动作的方式，给中国 CET-4 水平学习者讲透英文短语 "${phrase}"（参考释义：${meaning || "—"}）。
+
+请严格按这个结构输出（每条简短不啰嗦）：
+1. 拆词画面：把每个词（尤其介词/小词）的物理原始意义说出来，然后让我看到合起来的空间画面
+2. 一句话本质：用一句中文概括这个短语在母语者脑中的核心意象
+3. 3 个真实例句：分别来自 (a) 日常对话 (b) 影视/访谈 (c) 商务/邮件，每句配一个画面
+4. 推荐 1-2 个 YouTube 或 B 站短片，最好能定位到时间戳，让我直接听到母语者怎么用这个表达
+5. 常见误用与注意点：中国人最容易错的一处
+
+请避免"翻译就是 XX"的写法，多用"想象 ___ 的画面"。`;
+  try {
+    await navigator.clipboard.writeText(prompt);
+    showToast("讲透提示词已复制，去豆包问吧。");
+  } catch {
+    showToast("复制失败，请手动选中文字复制。");
+  }
+}
+
+async function copyBonusPrompt() {
+  const lesson = getLesson(selectedLessonDay);
+  const phraseList = lesson.phrases.slice(0, 6).map(([en]) => en).join("、");
+  const trackLabel = state.activeTrack === "warmup"
+    ? "日常生活场景（Friends / Modern Family / How I Met Your Mother 这种）"
+    : "硅谷思想 / 创业访谈 / TED / Naval podcast 这种";
+  const levelHint = state.activeTrack === "warmup"
+    ? "语速接近真实日常，不要刻意慢"
+    : "语速正常的真人对话或独白，难度匹配真实英语播客";
+  const prompt = `我刚学完一节英语听力课，今天的高频语块是：${phraseList}。
+
+请给我推荐 1 个 2-3 分钟的英文短视频片段，要求：
+1. ${trackLabel}，是真实场景不是教学视频
+2. 自然出现至少 2 个我刚学的语块
+3. ${levelHint}，CET-4 水平踮脚能听懂
+4. 给可点击的 YouTube 或 B 站链接（可带时间戳）
+5. 用一句中文告诉我：为什么这个片段适合我现在的水平，以及今天哪几个语块会在里面冒出来
+
+请只给一个最匹配的，不要给一长串选项。`;
+  try {
+    await navigator.clipboard.writeText(prompt);
+    showToast("延伸推荐提示词已复制，去豆包问。");
+  } catch {
+    showToast("复制失败，请手动选中文字复制。");
+  }
+}
+
+function saveBonusLink() {
+  const input = document.getElementById("bonusLinkInput");
+  if (!input) return;
+  const url = input.value.trim();
+  const key = stageKey(selectedLessonDay);
+  if (!url) {
+    delete state.bonusLinks[key];
+    saveState();
+    renderToday();
+    showToast("已清掉今日延伸链接。");
+    return;
+  }
+  state.bonusLinks[key] = { url, savedAt: new Date().toISOString(), reaction: (state.bonusLinks[key] || {}).reaction || null };
+  saveState();
+  renderToday();
+  showToast("已保存延伸视频链接。");
+}
+
+function saveBonusReaction(reaction) {
+  const key = stageKey(selectedLessonDay);
+  const prev = state.bonusLinks[key];
+  if (!prev || !prev.url) {
+    showToast("先粘贴并保存链接。");
+    return;
+  }
+  prev.reaction = reaction;
+  prev.reactionAt = new Date().toISOString();
+  saveState();
+  renderToday();
 }
 
 async function copyVideoPrompt(target) {
@@ -2248,6 +2476,41 @@ document.addEventListener("click", (event) => {
   const speakButton = event.target.closest("[data-speak]");
   if (speakButton) {
     speak(speakButton.dataset.speak, Number(speakButton.dataset.rate || 0.86));
+    return;
+  }
+
+  const deepDiveButton = event.target.closest("[data-deep-dive]");
+  if (deepDiveButton) {
+    copyDeepDivePrompt(deepDiveButton.dataset.deepDive, deepDiveButton.dataset.meaning);
+    return;
+  }
+
+  const bonusReactionButton = event.target.closest("[data-bonus-reaction]");
+  if (bonusReactionButton) {
+    saveBonusReaction(bonusReactionButton.dataset.bonusReaction);
+    return;
+  }
+
+  if (event.target.closest("#copyBonusPromptButton")) {
+    copyBonusPrompt();
+    return;
+  }
+
+  if (event.target.closest("#saveBonusLinkButton")) {
+    saveBonusLink();
+    return;
+  }
+
+  if (event.target.closest("#highlightCloseButton")) {
+    const dialog = document.getElementById("highlightDialog");
+    if (dialog && dialog.close) dialog.close();
+    return;
+  }
+
+  if (event.target.closest("#highlightNextLessonButton")) {
+    const dialog = document.getElementById("highlightDialog");
+    if (dialog && dialog.close) dialog.close();
+    goNextLesson();
     return;
   }
 
