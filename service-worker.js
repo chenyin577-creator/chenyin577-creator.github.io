@@ -1,4 +1,4 @@
-const CACHE_NAME = "naval-listening-v12-voicecoach";
+const CACHE_NAME = "naval-listening-v13-bilingual";
 const APP_FILES = [
   "./",
   "./index.html",
