@@ -980,7 +980,7 @@ const toast = document.getElementById("toast");
 
 function loadState() {
   const defaults = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     completed: {},
     notes: {},
     blindNotes: {},
@@ -999,7 +999,13 @@ function loadState() {
     longestStreak: 0,
     lastCompletedDate: null,
     bonusLinks: {},
-    highlightSeenForKey: null
+    highlightSeenForKey: null,
+    xp: 0,
+    level: 1,
+    achievements: [],
+    trainingHistory: [],
+    coachMode: true,
+    lastXpEvents: []
   };
 
   let saved = {};
@@ -1052,7 +1058,170 @@ function migrateState(s) {
     if (typeof s.highlightSeenForKey === "undefined") s.highlightSeenForKey = null;
     s.schemaVersion = 3;
   }
+  if (s.schemaVersion < 4) {
+    if (typeof s.xp !== "number") s.xp = 0;
+    if (typeof s.level !== "number") s.level = 1;
+    if (!Array.isArray(s.achievements)) s.achievements = [];
+    if (!Array.isArray(s.trainingHistory)) s.trainingHistory = [];
+    if (typeof s.coachMode === "undefined") s.coachMode = true;
+    if (!Array.isArray(s.lastXpEvents)) s.lastXpEvents = [];
+    s.schemaVersion = 4;
+  }
   return s;
+}
+
+// === 私人教练：等级 / XP / 成就 ===
+
+const LEVEL_LADDER = [
+  { level: 1, xpToNext: 100, name: "日常对话起步", desc: "见面寒暄、餐厅约时、工作流转" },
+  { level: 2, xpToNext: 250, name: "生活英语稳了", desc: "听得懂 Friends 慢速、能完整应对常见场景" },
+  { level: 3, xpToNext: 500, name: "思想访谈级", desc: "Naval 类播客踮脚能跟、抽象词汇连读破壳" },
+  { level: 4, xpToNext: 900, name: "时政新闻级", desc: "CNN/BBC 新闻速度 + 行业词汇能听懂主线" },
+  { level: 5, xpToNext: 1500, name: "脱口秀文化级", desc: "Last Week Tonight / 博客对话 / 文化双关秒懂" },
+  { level: 6, xpToNext: 0, name: "听感自由", desc: "外语在你脑中和母语反应一样快" }
+];
+
+const ACHIEVEMENTS = [
+  { id: "first_phrase", title: "第一个语块入库", hint: "保存第 1 个语块到语块本", icon: "🌱" },
+  { id: "phrase_25", title: "语块小宇宙", hint: "累计存了 25 个语块", icon: "📚" },
+  { id: "phrase_100", title: "语块图书馆", hint: "累计存了 100 个语块", icon: "🏛" },
+  { id: "first_recording_ok", title: "第一次开口", hint: "录音对照后点了「这条满意」", icon: "🎙" },
+  { id: "spoken_10", title: "开口 10 块", hint: "「能用出来」语块达到 10 个", icon: "🗣" },
+  { id: "spoken_50", title: "开口 50 块", hint: "「能用出来」语块达到 50 个", icon: "🔥" },
+  { id: "streak_3", title: "连续 3 天", hint: "连续打卡 3 天，节奏起来了", icon: "⚡" },
+  { id: "streak_7", title: "连续 7 天", hint: "连续打卡 7 天，80% 的人停在这里之前", icon: "💪" },
+  { id: "streak_21", title: "连续 21 天", hint: "连续 21 天，习惯长出来了", icon: "🌳" },
+  { id: "level_2", title: "升到 L2", hint: "听感升到「生活英语稳了」", icon: "🎯" },
+  { id: "level_3", title: "升到 L3", hint: "听感升到「思想访谈级」", icon: "🚀" },
+  { id: "level_4", title: "升到 L4", hint: "听感升到「时政新闻级」", icon: "🛰" },
+  { id: "first_blind_full", title: "首次「全懂」", hint: "首遍盲听就听懂了一整段", icon: "✨" },
+  { id: "session_30", title: "30 次训练", hint: "累计完成 30 次碎片训练", icon: "⛰" }
+];
+
+function xpToNextLevel(level) {
+  const tier = LEVEL_LADDER.find((t) => t.level === level);
+  return tier ? tier.xpToNext : 0;
+}
+
+function getLevelInfo(level) {
+  return LEVEL_LADDER.find((t) => t.level === level) || LEVEL_LADDER[LEVEL_LADDER.length - 1];
+}
+
+function awardXp(amount, reason) {
+  if (!amount || amount <= 0) return [];
+  state.xp = (state.xp || 0) + amount;
+  state.lastXpEvents = state.lastXpEvents || [];
+  state.lastXpEvents.unshift({ amount, reason, at: Date.now() });
+  state.lastXpEvents = state.lastXpEvents.slice(0, 20);
+  const unlocked = [];
+  while (true) {
+    const need = xpToNextLevel(state.level);
+    if (!need || state.xp < need) break;
+    state.xp -= need;
+    state.level += 1;
+    const lvlAch = ACHIEVEMENTS.find((a) => a.id === `level_${state.level}`);
+    if (lvlAch) unlocked.push(lvlAch);
+    unlocked.push({ id: `__levelup_${state.level}`, title: `升到 L${state.level}`, hint: getLevelInfo(state.level).name, icon: "🆙" });
+  }
+  saveState();
+  return unlocked;
+}
+
+function checkAchievements() {
+  const have = new Set(state.achievements || []);
+  const newly = [];
+  const conditions = [
+    ["first_phrase", () => (state.phrases || []).length >= 1],
+    ["phrase_25", () => (state.phrases || []).length >= 25],
+    ["phrase_100", () => (state.phrases || []).length >= 100],
+    ["first_recording_ok", () => (state.spokenChunks || []).length >= 1],
+    ["spoken_10", () => (state.spokenChunks || []).length >= 10],
+    ["spoken_50", () => (state.spokenChunks || []).length >= 50],
+    ["streak_3", () => (state.streak || 0) >= 3],
+    ["streak_7", () => (state.streak || 0) >= 7],
+    ["streak_21", () => (state.streak || 0) >= 21],
+    ["level_2", () => state.level >= 2],
+    ["level_3", () => state.level >= 3],
+    ["level_4", () => state.level >= 4],
+    ["first_blind_full", () => Object.values(state.blindAccuracy || {}).some((a) => a.first === "全懂")],
+    ["session_30", () => (state.trainingHistory || []).length >= 30]
+  ];
+  conditions.forEach(([id, ok]) => {
+    if (!have.has(id) && ok()) {
+      have.add(id);
+      const def = ACHIEVEMENTS.find((a) => a.id === id);
+      if (def) newly.push(def);
+    }
+  });
+  state.achievements = [...have];
+  return newly;
+}
+
+function flashRewards(xpAmount, xpReason, unlockedAchievements) {
+  const toaster = document.getElementById("rewardToaster");
+  if (!toaster) return;
+  const ts = Date.now();
+  const items = [];
+  if (xpAmount > 0) items.push(`<div class="reward-chip xp"><span class="reward-amount">+${xpAmount} XP</span><span class="reward-reason">${escapeHtml(xpReason || "")}</span></div>`);
+  unlockedAchievements.forEach((a) => {
+    items.push(`<div class="reward-chip achv"><span class="reward-icon">${a.icon || "🏅"}</span><div><span class="reward-title">${escapeHtml(a.title)}</span><span class="reward-reason">${escapeHtml(a.hint || "")}</span></div></div>`);
+  });
+  if (!items.length) return;
+  const id = "rwd_" + ts;
+  const wrap = document.createElement("div");
+  wrap.className = "reward-burst";
+  wrap.id = id;
+  wrap.innerHTML = items.join("");
+  toaster.appendChild(wrap);
+  setTimeout(() => {
+    wrap.classList.add("fade");
+    setTimeout(() => wrap.remove(), 600);
+  }, 3200);
+}
+
+function rewardAction(xpAmount, xpReason) {
+  const lvlUnlocks = awardXp(xpAmount, xpReason);
+  const newAchievements = checkAchievements();
+  saveState();
+  flashRewards(xpAmount, xpReason, [...newAchievements, ...lvlUnlocks]);
+  updateCoachPanel();
+  updateStreakBadge();
+  if (newAchievements.length > 0) renderAchievementWall();
+}
+
+function startQuickSession(minutes) {
+  state.trainingHistory = state.trainingHistory || [];
+  state.trainingHistory.unshift({ kind: "session_start", minutes, at: Date.now() });
+  state.trainingHistory = state.trainingHistory.slice(0, 200);
+  saveState();
+  const dueCount = getDueReviews().length;
+  if (minutes === 5) {
+    if (dueCount > 0) {
+      openView("reviewView");
+      showToast(`5 分钟训练：先复习 ${Math.min(dueCount, 3)} 张到期卡。`);
+    } else {
+      state.sessionMinutes = 5;
+      openView("todayView");
+      saveState();
+      renderAll();
+      showToast("5 分钟训练：跑一段盲听 → 终听验证。");
+    }
+    rewardAction(5, "5 分钟训练开局");
+  } else if (minutes === 10) {
+    state.sessionMinutes = 10;
+    openView("todayView");
+    saveState();
+    renderAll();
+    showToast("10 分钟训练：走完盲听→精听→同步→录音→终听。");
+    rewardAction(8, "10 分钟训练开局");
+  } else if (minutes === 15) {
+    state.sessionMinutes = 15;
+    openView("todayView");
+    saveState();
+    renderAll();
+    showToast(`15 分钟深度训练：${dueCount > 0 ? `先去复习 ${Math.min(dueCount, 5)} 张，` : ""}然后跑完整段。`);
+    rewardAction(12, "15 分钟训练开局");
+  }
 }
 
 function toIsoDay(date) {
@@ -1198,6 +1367,33 @@ function renderAll() {
   updateProgress();
   updateStreakBadge();
   refreshBackupStatusLine();
+  renderAchievementWall();
+}
+
+function renderAchievementWall() {
+  const wall = document.getElementById("achievementWall");
+  if (!wall) return;
+  const have = new Set(state.achievements || []);
+  const items = ACHIEVEMENTS.map((a) => {
+    const got = have.has(a.id);
+    return `
+      <div class="ach-card ${got ? "ach-got" : "ach-locked"}" title="${escapeHtml(a.hint || "")}">
+        <span class="ach-icon">${got ? a.icon : "🔒"}</span>
+        <div>
+          <span class="ach-title">${escapeHtml(a.title)}</span>
+          <span class="ach-hint">${escapeHtml(a.hint || "")}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+  const gotCount = have.size;
+  wall.innerHTML = `
+    <div class="ach-head">
+      <p class="eyebrow">成就墙</p>
+      <span class="ach-count">${gotCount}/${ACHIEVEMENTS.length}</span>
+    </div>
+    <div class="ach-grid">${items}</div>
+  `;
 }
 
 function updateStreakBadge() {
@@ -1221,6 +1417,56 @@ function updateStreakBadge() {
 
 function updateProgress() {
   renderDashboard();
+  updateCoachPanel();
+}
+
+function updateCoachPanel() {
+  const panel = document.getElementById("coachPanel");
+  if (!panel) return;
+  const info = getLevelInfo(state.level);
+  const next = LEVEL_LADDER.find((t) => t.level === state.level + 1);
+  const need = xpToNextLevel(state.level) || 0;
+  const pct = need > 0 ? Math.min(100, Math.round((state.xp / need) * 100)) : 100;
+  const spokenCount = (state.spokenChunks || []).length;
+  const phraseCount = (state.phrases || []).length;
+  const sessionCount = (state.trainingHistory || []).length;
+  panel.innerHTML = `
+    <div class="coach-head">
+      <div>
+        <p class="eyebrow">你的私人英语教练</p>
+        <h2 class="coach-level">L${state.level} · ${escapeHtml(info.name)}</h2>
+        <p class="muted coach-desc">${escapeHtml(info.desc)}</p>
+      </div>
+      <div class="coach-xp-circle" aria-label="经验值">
+        <span class="coach-xp-num">${state.xp}</span>
+        <span class="coach-xp-of">/${need || "MAX"}</span>
+      </div>
+    </div>
+    <div class="coach-bar"><div class="coach-bar-fill" style="width:${pct}%;"></div></div>
+    ${next ? `<p class="coach-next">还差 <strong>${Math.max(0, need - state.xp)}</strong> XP 升到 L${next.level} · ${escapeHtml(next.name)}</p>` : `<p class="coach-next">你已经在顶级，继续巩固。</p>`}
+    <div class="quick-train">
+      <p class="eyebrow">现在就练</p>
+      <div class="quick-buttons">
+        <button class="quick-btn" data-quick-train="5">
+          <span class="qt-min">5 分</span>
+          <span class="qt-detail">复习 1 + 新学 1 + 1 段盲听</span>
+        </button>
+        <button class="quick-btn primary-quick" data-quick-train="10">
+          <span class="qt-min">10 分</span>
+          <span class="qt-detail">复习 3 + 新学 2 + 1 段全流程</span>
+        </button>
+        <button class="quick-btn" data-quick-train="15">
+          <span class="qt-min">15 分</span>
+          <span class="qt-detail">复习 5 + 新学 3 + passage + 录音</span>
+        </button>
+      </div>
+    </div>
+    <div class="coach-stats">
+      <div><strong>${spokenCount}</strong><span>能开口</span></div>
+      <div><strong>${phraseCount}</strong><span>语块累计</span></div>
+      <div><strong>${sessionCount}</strong><span>训练次数</span></div>
+    </div>
+  `;
 }
 
 function renderDashboard() {
@@ -1845,6 +2091,9 @@ function updateSrsCard(en, grade) {
     mastery: deriveMastery(en, { repetitions })
   };
   saveState();
+  const xpMap = { stuck: 2, ok: 5, easy: 10 };
+  const labelMap = { stuck: "卡壳也算练习", ok: "复习答对", easy: "一听就懂" };
+  rewardAction(xpMap[grade] || 2, labelMap[grade] || "复习");
 }
 
 function refreshBackupStatusLine() {
@@ -1947,6 +2196,7 @@ function savePhrase(en, cn, intuition) {
   renderPhrases();
   renderReview();
   showToast("已存入语块本。");
+  rewardAction(5, `保存语块 "${trimmedEn}"`);
 }
 
 function openView(viewId) {
@@ -1964,12 +2214,17 @@ function completeCurrentLesson() {
   stages[String(selectedLessonDay)] = 5;
   setActiveSelectedDay(selectedLessonDay);
   updateStreakOnComplete();
+  state.trainingHistory = state.trainingHistory || [];
+  state.trainingHistory.unshift({ kind: "lesson", track: state.activeTrack, day: selectedLessonDay, at: Date.now() });
+  state.trainingHistory = state.trainingHistory.slice(0, 200);
   saveState();
   renderAll();
   if (!alreadyCompletedToday) {
     showHighlightDialog();
+    rewardAction(30, "完整跑完一课");
   } else {
     showToast("今日已完成过一次，再保存一次进度。");
+    rewardAction(5, "再保存一次");
   }
 }
 
@@ -2519,12 +2774,20 @@ function markSpoken(en) {
   if (!en) return;
   const list = state.spokenChunks;
   const exists = list.findIndex((e) => (typeof e === "string" ? e : e.en) === en);
+  const isNew = exists < 0;
   if (exists >= 0) list.splice(exists, 1);
   list.unshift({ en, at: new Date().toISOString() });
   saveState();
+  rewardAction(isNew ? 25 : 10, isNew ? `第一次开口 "${en}"` : `再录一遍 "${en}"`);
 }
 
 document.addEventListener("click", (event) => {
+  const quickTrainBtn = event.target.closest("[data-quick-train]");
+  if (quickTrainBtn) {
+    startQuickSession(Number(quickTrainBtn.dataset.quickTrain));
+    return;
+  }
+
   const trackButton = event.target.closest("[data-switch-track]");
   if (trackButton) {
     switchTrack(trackButton.dataset.switchTrack);
@@ -2537,6 +2800,7 @@ document.addEventListener("click", (event) => {
     const level = accuracyButton.dataset.level;
     const key = stageKey(selectedLessonDay);
     state.blindAccuracy[key] = state.blindAccuracy[key] || {};
+    const wasSet = Boolean(state.blindAccuracy[key][which]);
     state.blindAccuracy[key][which] = level;
     if (which === "first") {
       state.blindAccuracy[key].firstDate = todayIso();
@@ -2545,6 +2809,17 @@ document.addEventListener("click", (event) => {
     }
     saveState();
     renderToday();
+    if (!wasSet) {
+      const order = { "没听懂": 0, "几个词": 1, "懂大意": 2, "全懂": 3 };
+      const baseXp = 8;
+      const bonusForFull = level === "全懂" ? 12 : 0;
+      const finalImprove = which === "final" && state.blindAccuracy[key].first
+        ? Math.max(0, (order[level] || 0) - (order[state.blindAccuracy[key].first] || 0)) * 6
+        : 0;
+      const total = baseXp + bonusForFull + finalImprove;
+      const reason = which === "first" ? "首遍盲听自评" : `终听 ${finalImprove > 0 ? "进步 +" + finalImprove + " " : ""}自评`;
+      rewardAction(total, reason);
+    }
     return;
   }
 

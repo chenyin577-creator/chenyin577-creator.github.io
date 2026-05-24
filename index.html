@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260523-persist" />
+    <link rel="stylesheet" href="styles.css?v=20260523-coach" />
   </head>
   <body>
     <div class="app-shell">
@@ -37,6 +37,8 @@
 
       <main>
         <section class="view active" id="todayView" aria-labelledby="todayTitle">
+          <div class="coach-panel" id="coachPanel" aria-label="私人英语教练"></div>
+
           <div class="summary-band">
             <div>
               <p class="eyebrow">今日课程</p>
@@ -119,6 +121,8 @@
             <h2 id="phraseTitle">我的高价值表达</h2>
           </div>
 
+          <div class="achievement-wall" id="achievementWall" aria-label="成就墙"></div>
+
           <details class="backup-block">
             <summary>
               <span class="backup-summary-title">我的进度备份与恢复</span>
@@ -183,6 +187,7 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="reward-toaster" id="rewardToaster" aria-live="polite"></div>
 
     <dialog id="installDialog">
       <div class="dialog-inner">
@@ -227,6 +232,6 @@
       </div>
     </dialog>
 
-    <script src="app.js?v=20260523-persist" defer></script>
+    <script src="app.js?v=20260523-coach" defer></script>
   </body>
 </html>
