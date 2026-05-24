@@ -1197,6 +1197,7 @@ function renderAll() {
   updateSessionChips();
   updateProgress();
   updateStreakBadge();
+  refreshBackupStatusLine();
 }
 
 function updateStreakBadge() {
@@ -1844,6 +1845,87 @@ function updateSrsCard(en, grade) {
     mastery: deriveMastery(en, { repetitions })
   };
   saveState();
+}
+
+function refreshBackupStatusLine() {
+  const el = document.getElementById("backupStatusLine");
+  if (!el) return;
+  const phraseCount = (state.phrases || []).length;
+  const warmupDone = Object.keys(state.warmupCompleted || {}).length;
+  const navalDone = Object.keys(state.completed || {}).length;
+  const streak = state.streak || 0;
+  el.textContent = `${phraseCount} 个语块 · 热身 ${warmupDone}/7 · Naval ${navalDone}/30 · 🔥 ${streak} 天`;
+}
+
+async function exportStateToClipboard() {
+  const payload = JSON.stringify(state, null, 2);
+  try {
+    await navigator.clipboard.writeText(payload);
+    showToast("学习数据已复制到剪贴板。建议发给自己邮箱保存。");
+  } catch {
+    const box = document.getElementById("importStateBox");
+    if (box) {
+      box.value = payload;
+      box.focus();
+      box.select();
+      showToast("复制失败，已填到下方文本框，请手动选中复制。");
+    } else {
+      showToast("复制失败。");
+    }
+  }
+}
+
+function downloadStateAsFile() {
+  const payload = JSON.stringify(state, null, 2);
+  const blob = new Blob([payload], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `naval-listening-backup-${todayIso()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    a.remove();
+  }, 0);
+  showToast("备份文件已生成，请妥善保存。");
+}
+
+function importStateFromTextarea() {
+  const box = document.getElementById("importStateBox");
+  if (!box) return;
+  const raw = box.value.trim();
+  if (!raw) {
+    showToast("请先粘贴之前导出的内容。");
+    return;
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    showToast("不是有效的 JSON。请确认你粘的是完整导出文本。");
+    return;
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    showToast("内容看起来不是导出的学习数据。");
+    return;
+  }
+  if (!parsed.schemaVersion && !parsed.phrases && !parsed.completed && !parsed.warmupCompleted) {
+    showToast("内容里没找到学习数据字段，没敢覆盖。");
+    return;
+  }
+  if (!window.confirm("恢复会覆盖当前的进度（包括今天的）。确定继续？")) return;
+  // 备份当前 state 到 localStorage 一个独立 key，万一恢复后悔
+  try { localStorage.setItem("naval-listening-state-pre-import-" + todayIso(), JSON.stringify(state)); } catch {}
+  state = migrateState({ ...parsed });
+  saveState();
+  selectedLessonDay = getActiveSelectedDay() || getFirstOpenDay();
+  setActiveSelectedDay(selectedLessonDay);
+  saveState();
+  renderAll();
+  refreshBackupStatusLine();
+  box.value = "";
+  showToast("学习数据已恢复。");
 }
 
 function savePhrase(en, cn, intuition) {
@@ -2632,6 +2714,9 @@ document.getElementById("buildClipButton").addEventListener("click", analyzeClip
 document.getElementById("copyDoubaoPromptButton").addEventListener("click", copyDoubaoPrompt);
 document.getElementById("copyDoubaoVideoPromptButton").addEventListener("click", () => copyVideoPrompt("doubao"));
 document.getElementById("copyCodexVideoPromptButton").addEventListener("click", () => copyVideoPrompt("codex"));
+document.getElementById("exportStateButton")?.addEventListener("click", exportStateToClipboard);
+document.getElementById("downloadStateButton")?.addEventListener("click", downloadStateAsFile);
+document.getElementById("importStateButton")?.addEventListener("click", importStateFromTextarea);
 
 document.getElementById("phraseForm").addEventListener("submit", (event) => {
   event.preventDefault();
@@ -2653,8 +2738,32 @@ document.getElementById("closeInstallDialog").addEventListener("click", () => {
 window.speechSynthesis?.addEventListener?.("voiceschanged", () => {});
 
 if ("serviceWorker" in navigator) {
+  let swRefreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (swRefreshing) return;
+    swRefreshing = true;
+    window.location.reload();
+  });
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js").catch(() => {});
+    navigator.serviceWorker.register("service-worker.js").then((reg) => {
+      try { reg.update(); } catch {}
+      reg.addEventListener("updatefound", () => {
+        const incoming = reg.installing;
+        if (!incoming) return;
+        incoming.addEventListener("statechange", () => {
+          if (incoming.state === "installed" && navigator.serviceWorker.controller) {
+            try { incoming.postMessage({ type: "SKIP_WAITING" }); } catch {}
+          }
+        });
+      });
+    }).catch(() => {});
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg) { try { reg.update(); } catch {} }
+      });
+    }
   });
 }
 

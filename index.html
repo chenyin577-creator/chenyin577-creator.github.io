@@ -11,7 +11,7 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20260523-feedback" />
+    <link rel="stylesheet" href="styles.css?v=20260523-persist" />
   </head>
   <body>
     <div class="app-shell">
@@ -119,6 +119,27 @@
             <h2 id="phraseTitle">我的高价值表达</h2>
           </div>
 
+          <details class="backup-block">
+            <summary>
+              <span class="backup-summary-title">我的进度备份与恢复</span>
+              <span class="backup-summary-aside" id="backupStatusLine">数据保存在 iPhone 本机</span>
+            </summary>
+            <div class="backup-body">
+              <p class="muted small">建议每周备份一次。把导出的文本发给自己邮箱或 iCloud Notes 存起来——万一 iOS 清掉本地存储，可以从这里粘回来恢复。</p>
+              <div class="action-row">
+                <button class="primary compact" id="exportStateButton">复制学习数据到剪贴板</button>
+                <button class="secondary compact" id="downloadStateButton">下载为文件</button>
+              </div>
+              <label class="bonus-input" style="margin-top:12px;">
+                <span>从备份恢复（把之前导出的内容粘到下面）：</span>
+                <textarea id="importStateBox" rows="4" placeholder="粘贴之前复制的学习数据..."></textarea>
+              </label>
+              <div class="action-row">
+                <button class="primary compact" id="importStateButton">恢复进度</button>
+              </div>
+            </div>
+          </details>
+
           <form class="phrase-form" id="phraseForm">
             <input id="customPhrase" type="text" placeholder="英文表达" />
             <input id="customMeaning" type="text" placeholder="中文意思" />
@@ -206,6 +227,6 @@
       </div>
     </dialog>
 
-    <script src="app.js?v=20260523-feedback" defer></script>
+    <script src="app.js?v=20260523-persist" defer></script>
   </body>
 </html>

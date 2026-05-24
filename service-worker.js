@@ -1,4 +1,4 @@
-const CACHE_NAME = "naval-listening-v9-feedback";
+const CACHE_NAME = "naval-listening-v10-persist";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -12,6 +12,12 @@ const APP_FILES = [
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_FILES)));
   self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", (event) => {
