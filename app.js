@@ -1466,6 +1466,13 @@ function updateCoachPanel() {
       <div><strong>${phraseCount}</strong><span>语块累计</span></div>
       <div><strong>${sessionCount}</strong><span>训练次数</span></div>
     </div>
+    <button class="conversation-coach-cta" id="conversationCoachButton">
+      <span class="ccc-icon">🎤</span>
+      <span class="ccc-body">
+        <span class="ccc-title">找豆包当你的口语对话教练</span>
+        <span class="ccc-hint">复制为你定制的 prompt，去豆包用语音对话练真嘴皮 →</span>
+      </span>
+    </button>
   `;
 }
 
@@ -1761,6 +1768,13 @@ function renderToday() {
       <h3>口语复刻</h3>
       <p class="zh-note">先听一句，再按住"按住录我念"模仿说出来。会弹出对照框：把你的波形和原文音节节奏带叠在一起，自己耳朵当评分器。</p>
       <div class="sentence-list">${sentenceItems}</div>
+      <div class="conversation-coach-inline">
+        <p class="muted small">想要真人对答而不只是跟读？</p>
+        <button class="secondary compact" id="shadowConversationCoachButton">
+          <span style="font-size:18px;">🎤</span>
+          找豆包用语音陪你对话练
+        </button>
+      </div>
       <div class="action-row">
         <button class="primary" data-set-stage="5">进入终听验证</button>
       </div>
@@ -2450,6 +2464,49 @@ async function copyDoubaoPrompt() {
   }
 }
 
+async function copyConversationCoachPrompt() {
+  const info = getLevelInfo(state.level);
+  const recentPhrases = (state.phrases || [])
+    .slice(0, 10)
+    .map((p) => `- ${p.en}${p.cn ? `（${p.cn}）` : ""}${p.intuition ? ` —— ${p.intuition}` : ""}`)
+    .join("\n");
+  const spoken = (state.spokenChunks || []).map((e) => (typeof e === "string" ? e : e.en)).slice(0, 8);
+  const todayLesson = getLesson(selectedLessonDay);
+  const todayPhrases = todayLesson ? todayLesson.phrases.slice(0, 6).map(([en]) => en).join("、") : "";
+  const prompt = `你现在是我的私人英语口语教练。请用豆包的"语音对话"模式跟我聊——我需要的不是文本聊天，是张嘴说英语、你用嘴反馈的训练。
+
+【关于我】
+- 当前听感等级：L${state.level} · ${info.name}（${info.desc}）
+- 长期目标：能听懂 CNN/BBC 新闻和英文播客对话，且能自然开口说英语，不再害怕开口
+- 弱点：开口少、害怕错、肌肉记忆不够、不会用真实语块只会词典翻译
+- 今天的课文聚焦语块：${todayPhrases || "（暂无）"}
+- 我最近 10 个保存到语块本的高价值表达：
+${recentPhrases || "（暂无，初学者，请从最简单的日常场景起）"}
+- 我已经能脱口而出的语块：${spoken.length ? spoken.join("、") : "（还没有）"}
+
+【请按这样陪我训练，每次会话都遵守】
+1. **全程语音对话为主**——你说英文我听，我说英文你听。不要长篇打字，简短开口为先。
+2. **难度匹配 L${state.level}**：${state.level <= 1 ? "用日常对话语速，常用词" : state.level <= 2 ? "正常语速，常见生活语块" : state.level <= 3 ? "接近母语播客语速，可以用思想性词汇" : "母语速度，含新闻/抽象词汇"}
+3. **每次会话开局，你随机抛一个具体场景**给我（点餐 / 工作汇报 / 跟朋友吐槽 / 表达不同意见 / 解释一个想法 / 谈论一篇文章）。一句话开场，让我用英文接。
+4. **我开口后，请按这个三步反馈**：
+   (a) 我哪里说得自然或有进步 —— 1 句话
+   (b) **一个**最值得改的点（发音/连读/语块选择）—— 不要一次给我五个问题
+   (c) 给我一个 native speaker 的版本（一句话），让我跟读 2 遍
+5. **主动出题用我学过的语块**：当上下文合适时，故意把我"今天的课文聚焦语块"或"最近 10 个语块"塞进你的句子，逼我听出来；每隔几轮挑一个让我必须用一次。
+6. **每 5 轮挑一个我反复用错的语块**，给我一个画面感解释（不是词典翻译，是空间/动作画面）+ 1 个真实场景例句。
+7. **绝不**用长段中文给我讲语法。你最高优先级是：让我多开口、多听到我的错、多听到一个 native 版本马上跟读。
+8. **每次结束**，给我今天的 3 个 takeaway：① 你说得最 native 的那句 ② 最该回去重听的那个语块 ③ 下次见面前我应该录 5 遍的那句。
+
+【现在开始】请给我一个 L${state.level} 难度适合的、具体的开场场景，1-2 句英文，让我用英语回。`;
+
+  try {
+    await navigator.clipboard.writeText(prompt);
+    showToast("口语教练提示词已复制，去豆包打开语音对话模式粘进去。");
+  } catch {
+    showToast("复制失败，请手动选中文字复制。");
+  }
+}
+
 async function copyDeepDivePrompt(phrase, meaning) {
   const prompt = `请用画面感+空间动作的方式，给中国 CET-4 水平学习者讲透英文短语 "${phrase}"（参考释义：${meaning || "—"}）。
 
@@ -2785,6 +2842,11 @@ document.addEventListener("click", (event) => {
   const quickTrainBtn = event.target.closest("[data-quick-train]");
   if (quickTrainBtn) {
     startQuickSession(Number(quickTrainBtn.dataset.quickTrain));
+    return;
+  }
+
+  if (event.target.closest("#conversationCoachButton") || event.target.closest("#shadowConversationCoachButton")) {
+    copyConversationCoachPrompt();
     return;
   }
 

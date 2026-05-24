@@ -1515,6 +1515,82 @@ button.secondary.compact {
   color: var(--ink);
 }
 
+.conversation-coach-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(232, 104, 74, 0.25);
+  background: linear-gradient(135deg, #fff4ec, #ffeae0);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.conversation-coach-cta:hover {
+  box-shadow: 0 8px 18px rgba(232, 104, 74, 0.18);
+}
+
+.conversation-coach-cta:active {
+  transform: scale(0.985);
+}
+
+.ccc-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.ccc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.ccc-title {
+  font-weight: 700;
+  color: var(--coral);
+  font-size: 14px;
+}
+
+.ccc-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.conversation-coach-inline {
+  margin: 12px 0 4px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #fff4ec, #ffeae0);
+  border-radius: 10px;
+  border: 1px solid rgba(232, 104, 74, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.conversation-coach-inline .muted {
+  margin: 0;
+  color: var(--coral);
+  font-weight: 600;
+}
+
+.conversation-coach-inline button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--coral);
+  color: white;
+  border-color: var(--coral);
+}
+
 /* Reward toaster */
 .reward-toaster {
   position: fixed;
