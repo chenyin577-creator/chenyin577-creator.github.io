@@ -1,4 +1,4 @@
-const CACHE_NAME = "naval-listening-v13-bilingual";
+const CACHE_NAME = "naval-listening-v14-douyin";
 const APP_FILES = [
   "./",
   "./index.html",
