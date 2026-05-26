@@ -1515,12 +1515,19 @@ button.secondary.compact {
   color: var(--ink);
 }
 
+.ai-cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 .conversation-coach-cta {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  margin-top: 14px;
+  margin-top: 0;
   padding: 12px 14px;
   border-radius: 14px;
   border: 1px solid rgba(232, 104, 74, 0.25);
@@ -1537,6 +1544,30 @@ button.secondary.compact {
 
 .conversation-coach-cta:active {
   transform: scale(0.985);
+}
+
+.conversation-coach-cta.cta-immersion {
+  border-color: rgba(20, 124, 116, 0.25);
+  background: linear-gradient(135deg, #ecf6f5, #ddeeec);
+  margin-top: 14px;
+}
+
+.conversation-coach-cta.cta-immersion .ccc-title {
+  color: var(--teal-deep);
+}
+
+.conversation-coach-cta.cta-immersion:hover {
+  box-shadow: 0 8px 18px rgba(20, 124, 116, 0.18);
+}
+
+.ai-cta-grid .conversation-coach-cta.cta-immersion {
+  margin-top: 0;
+}
+
+@media (max-width: 480px) {
+  .ai-cta-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ccc-icon {

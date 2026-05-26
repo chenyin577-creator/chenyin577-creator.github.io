@@ -1466,13 +1466,22 @@ function updateCoachPanel() {
       <div><strong>${phraseCount}</strong><span>语块累计</span></div>
       <div><strong>${sessionCount}</strong><span>训练次数</span></div>
     </div>
-    <button class="conversation-coach-cta" id="conversationCoachButton">
-      <span class="ccc-icon">🎤</span>
-      <span class="ccc-body">
-        <span class="ccc-title">找豆包当你的口语对话教练</span>
-        <span class="ccc-hint">复制为你定制的 prompt，去豆包用语音对话练真嘴皮 →</span>
-      </span>
-    </button>
+    <div class="ai-cta-grid">
+      <button class="conversation-coach-cta" id="conversationCoachButton">
+        <span class="ccc-icon">🎤</span>
+        <span class="ccc-body">
+          <span class="ccc-title">找豆包当口语教练</span>
+          <span class="ccc-hint">语音对话，开口练嘴皮</span>
+        </span>
+      </button>
+      <button class="conversation-coach-cta cta-immersion" id="immersionButton">
+        <span class="ccc-icon">🎧</span>
+        <span class="ccc-body">
+          <span class="ccc-title">沉浸磨耳朵</span>
+          <span class="ccc-hint">让豆包教你去抖音搜哪种长视频</span>
+        </span>
+      </button>
+    </div>
   `;
 }
 
@@ -2464,6 +2473,54 @@ async function copyDoubaoPrompt() {
   }
 }
 
+async function copyImmersionPrompt() {
+  const info = getLevelInfo(state.level);
+  const recentPhrases = (state.phrases || []).slice(0, 8).map((p) => p.en).join("、");
+  const styleLine = state.level <= 2
+    ? "日常情境喜剧（老友记 Friends、摩登家庭 Modern Family、办公室 The Office 这类）/ 英语博主日常 vlog / 英语母语者唠嗑短片"
+    : state.level <= 3
+    ? "脱口秀片段（Trevor Noah / James Corden / Late Night 切片）/ podcast 切片 / 访谈节目"
+    : "新闻播报（CNN / BBC 切片）/ 时政评论 / 深度访谈 / 演讲";
+  const durationLine = state.level <= 2 ? "10-15 分钟" : state.level <= 3 ? "12-20 分钟" : "15-25 分钟";
+  const prompt = `我刚完成一段英语听力训练，现在想"沉浸式磨耳朵"——找一段**${durationLine}**的英文视频，**坐在那听完不练，纯输入**。
+
+【我现在的水平 L${state.level}】
+${info.name}（${info.desc}）
+最近在练的语块：${recentPhrases || "（暂无）"}
+
+【我要的视频】
+- **时长**：${durationLine}（这次不要短片，要够长能让耳朵进入状态）
+- **风格**：${styleLine}
+- **必须有英文字幕**（不是中文翻译字幕）
+- **日常、有点幽默**——不要那种严肃说教的，要让我笑着听下去
+- **难度**：L${state.level} 踮脚能跟，约 70% 听懂，30% 是新挑战
+- **语速**：${state.level <= 2 ? "自然日常语速，不要刻意慢" : "母语者正常语速"}
+
+【请输出抖音 App 里的操作指南（不要给链接，链接都失效，让我自己搜）】
+
+**Step 1 · 搜什么**
+给我 3 个抖音中文搜索词，搜出来对应上面要求，比如「Friends 整集解析」「美剧 10 分钟英语」「英语博主日常 vlog 英文字幕」。
+
+**Step 2 · 关注哪类博主**
+给我 3 个抖音上发英语长视频片段的博主类型（如果你知道具体账号名最好；不确定就给关键词类型）。重点：发长视频不是 30 秒切片。
+
+**Step 3 · 选哪个**
+告诉我看到什么样的视频缩略图/标题就该点进去（长度标志、字幕标志、风格标志），用一句中文。
+
+**Step 4 · 怎么听**
+- 第一遍：不看字幕，让英文先冲进耳朵（即使只懂 30% 也别停）
+- 第二遍：边看英文字幕边听，注意母语者的连读、节奏、重音
+- 第三遍（可选）：挑 1-2 句喜欢的，回到我的 App「粘贴」tab 贴进去做学习卡
+
+【输出风格】中文，简短，分 4 步。**绝对不要给 URL**——豆包给的视频链接 90% 是失效的，让我自己在抖音里搜更靠谱。`;
+  try {
+    await navigator.clipboard.writeText(prompt);
+    showToast("磨耳朵提示词已复制，去豆包问哪里找长视频。");
+  } catch {
+    showToast("复制失败，请手动选中文字复制。");
+  }
+}
+
 async function copyConversationCoachPrompt() {
   const info = getLevelInfo(state.level);
   const recentPhrases = (state.phrases || [])
@@ -2519,13 +2576,16 @@ async function copyDeepDivePrompt(phrase, meaning) {
   const prompt = `请用画面感+空间动作的方式，给中国 CET-4 水平学习者讲透英文短语 "${phrase}"（参考释义：${meaning || "—"}）。
 
 请严格按这个结构输出（每条简短不啰嗦）：
-1. 拆词画面：把每个词（尤其介词/小词）的物理原始意义说出来，然后让我看到合起来的空间画面
-2. 一句话本质：用一句中文概括这个短语在母语者脑中的核心意象
-3. 3 个真实例句：分别来自 (a) 日常对话 (b) 影视/访谈 (c) 商务/邮件，每句配一个画面
-4. 推荐 1-2 个**抖音**英语博主的短视频链接（包含这个表达的真实用法）。**重要**：必须是中国大陆可直接打开的，优先级 **抖音 > 小红书 > 微信视频号 > B 站**。不要给 YouTube（需要科学上网）。不要给已经下架/删除的视频——如果不确定，宁可给搜索建议（比如"在抖音搜索 '${phrase} 英语博主'"）也不要给一个打不开的链接。
-5. 常见误用与注意点：中国人最容易错的一处
+1. **拆词画面**：把每个词（尤其介词/小词）的物理原始意义说出来，然后让我看到合起来的空间画面
+2. **一句话本质**：用一句中文概括这个短语在母语者脑中的核心意象
+3. **3 个真实例句**：分别来自 (a) 日常对话 (b) 影视/访谈 (c) 商务/邮件，每句配一个画面
+4. **去抖音听真用法**——**重要**：不要给我抖音/B站链接（你给的链接大概率失效，我之前点过几次都打不开）。改成给我**搜索动作**：
+   - 在抖音搜索框输入什么关键词（中文），比如 "${phrase} 英语用法" / "${phrase} 美剧片段" / "${phrase} 老外怎么说"
+   - 关注哪类博主（英语口语 / 美剧切片 / 英语博士这类，给 2 个具体方向就够）
+   - 选视频时看什么标志（有英文字幕、时长 1-3 分钟、画面是真实情境不是教学）
+5. **常见误用与注意点**：中国人最容易错的一处
 
-请避免"翻译就是 XX"的写法，多用"想象 ___ 的画面"。`;
+请避免"翻译就是 XX"的写法，多用"想象 ___ 的画面"。第 4 条**绝对不要给任何 URL**——抖音 App 里的搜索框比你给链接靠谱多了。`;
   try {
     await navigator.clipboard.writeText(prompt);
     showToast("讲透提示词已复制，去豆包问吧。");
@@ -2545,15 +2605,26 @@ async function copyBonusPrompt() {
     : "语速正常的真人对话或独白，难度匹配真实英语播客";
   const prompt = `我刚学完一节英语听力课，今天的高频语块是：${phraseList}。
 
-请给我推荐 1 个 2-3 分钟的英文短视频片段，要求：
-1. ${trackLabel}，是真实场景不是教学视频
-2. 自然出现至少 2 个我刚学的语块
-3. ${levelHint}，CET-4 水平踮脚能听懂
-4. **平台优先级**：抖音 > 小红书 > 微信视频号 > B 站。**必须给中国大陆能直接打开的链接**，不要 YouTube（要科学上网）。如果你不确定某个具体视频还在线，宁可给一个搜索建议（比如"在抖音搜索 'XX 英语 / 美剧片段 / Friends 字幕'"+ 一句话告诉我搜什么样的片段最匹配），也不要给一个我点开发现 404 / 已下架的链接。
-5. 用一句中文告诉我：为什么这个片段适合我现在的水平，以及今天哪几个语块会在里面冒出来
-6. **如果你给的是抖音/小红书链接**，请同时告诉我视频的博主名字、视频标题或截图描述——这样万一链接失效我能自己在 App 里搜到
+**重要前提**：你（豆包）没法直接给我抖音/B站视频链接（要么是死链，要么你根本不知道最新视频）。所以**请不要给链接**，给我「**抖音 App 里要做什么动作**」的清晰指南。
 
-请只给一个最匹配的，不要给一长串选项。`;
+请按下面结构输出，让我打开手机抖音 App 就能照着做：
+
+**Step 1 · 在抖音搜什么**
+给我 2-3 个候选搜索词（中文），比如：「Friends 高能片段 英文字幕」「美剧情景对话」「老友记 学英语」。要求：搜出来必须是 ${trackLabel}，2-3 分钟内片段，自然口语不是教学。
+
+**Step 2 · 跟谁的账号**
+推荐 2-3 个抖音上专门发英语片段 / 美剧切片 / 英语口语的博主名字（如果你不确定具体账号，给「关键词类型」也行，比如"搜 'XX英语' / 'XX老师' / 'XX学英语' 这类账号"）。
+
+**Step 3 · 选哪条视频**
+告诉我看到什么样的视频缩略图 / 标题就该点进去：
+- 时长：${state.activeTrack === "warmup" ? "1-3 分钟生活片段" : "2-4 分钟访谈/演讲切片"}
+- 画面特征：${state.activeTrack === "warmup" ? "情境喜剧、日常对话、有英文字幕" : "演讲台/访谈/podcast 截图，有英文字幕"}
+- 一定要有**英文字幕**（不是中文翻译字幕）
+
+**Step 4 · 听完做什么**
+告诉我：看完这条视频，今天学的哪几个语块大概率会冒出来？（${levelHint}）一句话说清。如果听到了，回到我的 App「粘贴」tab，把那条视频的英文片段贴进去做学习卡。
+
+请用中文输出，简短、可执行。**不要给任何 URL 或链接**，因为豆包给的链接大概率是失效的，不如让我自己搜。`;
   try {
     await navigator.clipboard.writeText(prompt);
     showToast("延伸推荐提示词已复制，去豆包问。");
@@ -2856,6 +2927,11 @@ document.addEventListener("click", (event) => {
 
   if (event.target.closest("#conversationCoachButton") || event.target.closest("#shadowConversationCoachButton")) {
     copyConversationCoachPrompt();
+    return;
+  }
+
+  if (event.target.closest("#immersionButton") || event.target.closest("#highlightImmersionButton")) {
+    copyImmersionPrompt();
     return;
   }
 
